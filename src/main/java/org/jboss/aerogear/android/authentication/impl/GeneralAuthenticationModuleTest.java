@@ -95,13 +95,13 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
         ArgumentCaptor urlArg = ArgumentCaptor.forClass(Object.class);
 
         verify(factory).get(urlArg.capture());
-		if (urlArg.getValue() instanceof URL) {
-			Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue().toString());
-		} else if (urlArg.getValue() instanceof Object[]) {
-		        Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, ((Object[])urlArg.getValue())[0].toString());
-		} else {
-			fail("Unknown parameter type");
-		}
+        if (urlArg.getValue() instanceof URL) {
+            Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue().toString());
+        } else if (urlArg.getValue() instanceof Object[]) {
+            Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, ((Object[]) urlArg.getValue())[0].toString());
+        } else {
+            fail("Unknown parameter type");
+        }
     }
 
     public void testAbstractMethodsThrowExceptions() throws InterruptedException {

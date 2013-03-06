@@ -70,7 +70,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.Mockito.eq;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
@@ -216,13 +215,13 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
 
         verify(factory).get(urlArg.capture());
         if (urlArg.getValue() instanceof URL) {
-        	Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", urlArg.getValue().toString());
-		} else if (urlArg.getValue() instanceof Object[]) {
-			Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", ((Object[])urlArg.getValue())[0].toString());
-		} else {
-			fail("Unknown parameter type");
-		}
-        
+            Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", urlArg.getValue().toString());
+        } else if (urlArg.getValue() instanceof Object[]) {
+            Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", ((Object[]) urlArg.getValue())[0].toString());
+        } else {
+            fail("Unknown parameter type");
+        }
+
     }
 
     /**
