@@ -28,7 +28,7 @@ public class ReadFilterTest extends ActivityInstrumentationTestCase2<MainActivit
     public ReadFilterTest() {
         super(MainActivity.class);
     }
-    
+
     public void testFilterQueryBuilder() throws JSONException {
         ReadFilter filter = new ReadFilter();
         filter.setLimit(1);

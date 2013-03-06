@@ -46,7 +46,7 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
     public GeneralAuthenticationModuleTest() {
         super(MainActivity.class);
     }
-    
+
     private static final URL SIMPLE_URL;
 
     static {
@@ -92,11 +92,16 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
         });
 
         latch.await(1, TimeUnit.SECONDS);
-        ArgumentCaptor<Object[]> urlArg = ArgumentCaptor.forClass(Object[].class);
-                
-		verify(factory).get(urlArg.capture());
-                
-        Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue()[0].toString());
+        ArgumentCaptor urlArg = ArgumentCaptor.forClass(Object.class);
+
+        verify(factory).get(urlArg.capture());
+		if (urlArg.getValue() instanceof URL) {
+			Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue().toString());
+		} else if (urlArg.getValue() instanceof Object[]) {
+		        Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, ((Object[])urlArg.getValue())[0].toString());
+		} else {
+			fail("Unknown parameter type");
+		}
     }
 
     public void testAbstractMethodsThrowExceptions() throws InterruptedException {

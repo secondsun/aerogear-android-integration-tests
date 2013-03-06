@@ -95,4 +95,9 @@ public class Data implements Comparable<Data> {
         return id.compareTo(data.id);
     }
 
+    @Override
+    public String toString() {
+        return "Data{" + "id=" + id + ", name=" + name + ", description=" + description + '}';
+    }
+
 }

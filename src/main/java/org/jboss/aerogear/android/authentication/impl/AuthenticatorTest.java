@@ -31,7 +31,7 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
     public AuthenticatorTest() {
         super(MainActivity.class);
     }
-    
+
     private static final URL SIMPLE_URL;
     private static final String SIMPLE_MODULE_NAME = "simple";
 
@@ -53,13 +53,13 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
 
     public void testAddAuthenticatorFailsWithUnsupportedType() {
         try {
-        Authenticator authenticator = new Authenticator(SIMPLE_URL);
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
-        config.setAuthType(null);
-        AuthenticationModule simpleAuthModule = authenticator.auth(
-                SIMPLE_MODULE_NAME, config);
+            Authenticator authenticator = new Authenticator(SIMPLE_URL);
+            AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+            config.setAuthType(null);
+            AuthenticationModule simpleAuthModule = authenticator.auth(
+                    SIMPLE_MODULE_NAME, config);
 
-        assertNotNull(simpleAuthModule);
+            assertNotNull(simpleAuthModule);
         } catch (IllegalArgumentException ex) {
             return;
         }
