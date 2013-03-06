@@ -133,12 +133,6 @@
                             <groupId>com.google.dexmaker</groupId>
                             <artifactId>dexmaker-mockito</artifactId>
                             <version>1.0</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.mockito</groupId>	
-                                    <artifactId>mockito-core</artifactId>	
-                                </exclusion>
-                            </exclusions>
                         </artifactItem>      
                     </artifactItems>
                     <outputDirectory>${basedir}/libs</outputDirectory>
