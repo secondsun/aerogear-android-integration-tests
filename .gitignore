@@ -14,11 +14,17 @@ libs/
 bin/
 project.properties
 
+######### NetBeans ##########
+
+nb-configuration.xml
+
 ########### Maven ###########
 
 target/
 tmp/
-
+emma.out
+noemma.out
+proguard-project.txt
 ########### Android ###########
 
 gen/
