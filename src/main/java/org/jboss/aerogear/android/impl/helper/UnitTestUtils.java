@@ -18,9 +18,14 @@
 package org.jboss.aerogear.android.impl.helper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
 import org.jboss.aerogear.android.impl.reflection.FieldNotFoundException;
 
 public class UnitTestUtils {
@@ -74,5 +79,28 @@ public class UnitTestUtils {
         }
 
         return fields;
+    }
+
+    public static void callMethod(Object target, String methodName) {
+        try {
+            Method method = target.getClass().getMethod(methodName);
+            method.setAccessible(true);
+            method.invoke(target);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
     }
 }

@@ -69,7 +69,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
+import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
@@ -127,6 +130,70 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
 
     }
 
+    public void testSingleObjectDelete() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        
+        final HttpStubProvider provider = mock(HttpStubProvider.class);
+        when(provider.getUrl()).thenReturn(url);
+        
+        
+        PipeConfig config = new PipeConfig(url,
+                ModernLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<ModernLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(ModernLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<ModernLoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+
+        runRemove(adapter, "1");
+
+        verify(provider).delete(eq("1"));
+
+    }
+    
+    public void testMultipleCallsToLoadCallDeliver() {
+        PipeHandler handler = mock(PipeHandler.class);
+        final AtomicBoolean called = new AtomicBoolean(false);
+        when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
+        ModernReadLoader loader = new ModernReadLoader(getActivity(), null, handler, null, null){
+
+            @Override
+            public void deliverResult(Object data) {
+                called.set(true);
+                return;
+            }
+
+            @Override
+            public void forceLoad() {
+                throw new IllegalStateException("Should not be called");
+            }
+            
+            
+            
+        };
+        loader.loadInBackground();
+        UnitTestUtils.callMethod(loader, "onStartLoading");
+        
+        assertTrue(called.get());
+        
+    }
+    
     private <T> List<T> runRead(Pipe<T> restPipe) throws InterruptedException {
         return runRead(restPipe, null);
     }
@@ -165,6 +232,35 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
         return resultRef.get();
     }
 
+    /**
+     * Runs a remove method, returns the result of the call back and makes sure no
+     * exceptions are thrown
+     * 
+     */
+    private <T> void runRemove(Pipe<T> restPipe, String id)
+            throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicBoolean hasException = new AtomicBoolean(false);
+        
+        restPipe.remove(id, new Callback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                hasException.set(true);
+                Logger.getLogger(ModernLoaderAdapterTest.class.getSimpleName())
+                        .log(Level.SEVERE, e.getMessage(), e);
+                latch.countDown();
+            }
+        });
+
+        latch.await(2, TimeUnit.SECONDS);
+        Assert.assertFalse(hasException.get());
+    }
+    
     public void testRunReadWithFilterAndAuthenticaiton() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
