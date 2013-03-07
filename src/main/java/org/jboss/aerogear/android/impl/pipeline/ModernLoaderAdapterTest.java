@@ -70,6 +70,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernRemoveLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernSaveLoader;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -172,6 +174,67 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
         final AtomicBoolean called = new AtomicBoolean(false);
         when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
         ModernReadLoader loader = new ModernReadLoader(getActivity(), null, handler, null, null){
+
+            @Override
+            public void deliverResult(Object data) {
+                called.set(true);
+                return;
+            }
+
+            @Override
+            public void forceLoad() {
+                throw new IllegalStateException("Should not be called");
+            }
+            
+            @Override
+            public void onStartLoading() {
+            	super.onStartLoading();
+            }
+            
+        };
+        loader.loadInBackground();
+        UnitTestUtils.callMethod(loader, "onStartLoading");
+        
+        assertTrue(called.get());
+        
+    }
+    
+    
+    public void testMultipleCallsToSaveCallDeliver() {
+        PipeHandler handler = mock(PipeHandler.class);
+        final AtomicBoolean called = new AtomicBoolean(false);
+        when(handler.onSave(any())).thenReturn(new ArrayList());
+        ModernSaveLoader loader = new ModernSaveLoader(getActivity(), null, handler, null){
+
+            @Override
+            public void deliverResult(Object data) {
+                called.set(true);
+                return;
+            }
+
+            @Override
+            public void forceLoad() {
+                throw new IllegalStateException("Should not be called");
+            }
+            
+            @Override
+            public void onStartLoading() {
+            	super.onStartLoading();
+            }
+            
+        };
+        loader.loadInBackground();
+        UnitTestUtils.callMethod(loader, "onStartLoading");
+        
+        assertTrue(called.get());
+        
+    }
+    
+    public void testMultipleCallsToRemoveCallDeliver() {
+        PipeHandler handler = mock(PipeHandler.class);
+        final AtomicBoolean called = new AtomicBoolean(false);
+        when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
+        ModernRemoveLoader loader = new ModernRemoveLoader(getActivity(), null, handler, null){
 
             @Override
             public void deliverResult(Object data) {
