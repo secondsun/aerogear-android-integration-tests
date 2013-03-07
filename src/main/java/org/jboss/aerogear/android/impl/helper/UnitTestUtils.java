@@ -83,7 +83,7 @@ public class UnitTestUtils {
 
     public static void callMethod(Object target, String methodName) {
         try {
-            Method method = target.getClass().getMethod(methodName);
+            Method method = target.getClass().getDeclaredMethod(methodName);
             method.setAccessible(true);
             method.invoke(target);
         } catch (IllegalAccessException ex) {

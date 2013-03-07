@@ -184,7 +184,10 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
                 throw new IllegalStateException("Should not be called");
             }
             
-            
+            @Override
+            public void onStartLoading() {
+            	super.onStartLoading();
+            }
             
         };
         loader.loadInBackground();
