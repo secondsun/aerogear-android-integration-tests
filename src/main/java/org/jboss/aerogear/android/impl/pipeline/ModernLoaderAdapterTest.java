@@ -17,7 +17,9 @@
 
 package org.jboss.aerogear.android.impl.pipeline;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,9 +53,14 @@ import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernRemoveLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.ModernSaveLoader;
 import org.jboss.aerogear.android.pipeline.LoaderPipe;
 import org.jboss.aerogear.android.pipeline.Pipe;
+import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.json.JSONObject;
+import org.mockito.ArgumentCaptor;
 
 import android.annotation.TargetApi;
 import android.graphics.Point;
@@ -69,15 +76,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernRemoveLoader;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernSaveLoader;
-import org.jboss.aerogear.android.pipeline.PipeHandler;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public ModernLoaderAdapterTest() {
         super(MainActivity.class);
@@ -87,12 +89,6 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
             .getSimpleName();
     private static final String SERIALIZED_POINTS = "{\"points\":[{\"x\":0,\"y\":0},{\"x\":1,\"y\":2},{\"x\":2,\"y\":4},{\"x\":3,\"y\":6},{\"x\":4,\"y\":8},{\"x\":5,\"y\":10},{\"x\":6,\"y\":12},{\"x\":7,\"y\":14},{\"x\":8,\"y\":16},{\"x\":9,\"y\":18}],\"id\":\"1\"}";
     private URL url;
-    private final Provider<HttpProvider> stubHttpProviderFactory = new Provider<HttpProvider>() {
-        @Override
-        public HttpProvider get(Object... in) {
-            return new HttpStubProvider((URL) in[0]);
-        }
-    };
 
     public void setUp() throws MalformedURLException {
         url = new URL("http://server.com/context/");
@@ -136,8 +132,6 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
                 Point.class, new PointTypeAdapter());
-        HeaderAndBody response = new HeaderAndBody(
-                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
         
         final HttpStubProvider provider = mock(HttpStubProvider.class);
         when(provider.getUrl()).thenReturn(url);
@@ -277,7 +271,9 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
         final AtomicReference<List<T>> resultRef = new AtomicReference<List<T>>();
 
         restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void onSuccess(List<T> data) {
                 resultRef.set(data);
                 latch.countDown();
@@ -309,7 +305,9 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
         final AtomicBoolean hasException = new AtomicBoolean(false);
         
         restPipe.remove(id, new Callback<Void>() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void onSuccess(Void data) {
                 latch.countDown();
             }
@@ -359,7 +357,9 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
         ModernLoaderAdapter<Data> adapter = (ModernLoaderAdapter<Data>) pipeline.get("data", getActivity());
 
         adapter.readWithFilter(filter, new Callback<List<Data>>() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void onSuccess(List<Data> data) {
                 latch.countDown();
             }
@@ -384,37 +384,6 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2 {
             fail("Unknown parameter type");
         }
 
-    }
-
-    /**
-     * Runs a read method, returns the result of the call back and rethrows the
-     * underlying exception
-     * 
-     * @param restPipe
-     */
-    private <T> List<T> runReadForException(Pipe<T> restPipe,
-            ReadFilter readFilter) throws InterruptedException, Exception {
-        final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicBoolean hasException = new AtomicBoolean(false);
-        final AtomicReference<Exception> exceptionref = new AtomicReference<Exception>();
-        restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
-            @Override
-            public void onSuccess(List<T> data) {
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                hasException.set(true);
-                exceptionref.set(e);
-                latch.countDown();
-            }
-        });
-
-        latch.await(2, TimeUnit.SECONDS);
-        Assert.assertTrue(hasException.get());
-
-        throw exceptionref.get();
     }
 
     private static class PointTypeAdapter implements InstanceCreator,
