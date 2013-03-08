@@ -16,19 +16,26 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
-import android.test.AndroidTestCase;
-import org.jboss.aerogear.android.impl.pipeline.paging.WrappingPagedList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.ReadFilter;
+import org.jboss.aerogear.android.impl.pipeline.paging.WrappingPagedList;
 import org.jboss.aerogear.android.pipeline.Pipe;
-import static org.mockito.Mockito.*;
+
+import android.test.AndroidTestCase;
 
 public class PagedListTest extends AndroidTestCase {
 
-    public void testNext() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public void testNext() {
         Pipe pipe = mock(Pipe.class);
         ReadFilter next = new ReadFilter();
         List delegate = new ArrayList();

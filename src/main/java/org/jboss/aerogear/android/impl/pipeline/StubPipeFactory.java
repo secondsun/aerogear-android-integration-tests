@@ -17,15 +17,17 @@
 
 package org.jboss.aerogear.android.impl.pipeline;
 
-import com.google.gson.Gson;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeFactory;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.jboss.aerogear.android.pipeline.PipeType;
+
+import com.google.gson.Gson;
 
 public class StubPipeFactory implements PipeFactory {
 

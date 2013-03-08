@@ -18,6 +18,7 @@
 package org.jboss.aerogear.android.impl.datamanager;
 
 import java.io.Serializable;
+
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 
 public class StubIdGenerator implements IdGenerator {

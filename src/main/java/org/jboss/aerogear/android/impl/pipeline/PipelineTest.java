@@ -15,20 +15,20 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
-import android.test.AndroidTestCase;
+import static org.jboss.aerogear.android.impl.pipeline.PipeTypes.REST;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+
 import org.jboss.aerogear.android.Pipeline;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.authentication.impl.AGSecurityAuthenticationConfig;
 import org.jboss.aerogear.android.authentication.impl.AGSecurityAuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
-import static org.jboss.aerogear.android.impl.pipeline.PipeTypes.REST;
 import org.jboss.aerogear.android.pipeline.Pipe;
+
+import android.test.AndroidTestCase;
 
 public class PipelineTest extends AndroidTestCase {
 

@@ -16,7 +16,6 @@
 package org.jboss.aerogear.android.impl.pipeline;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,20 +28,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import junit.framework.Assert;
-
 import org.jboss.aerogear.MainFragmentActivity;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.Pipeline;
 import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.RecordId;
-import org.jboss.aerogear.android.authentication.AuthenticationModule;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
-import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
 import org.jboss.aerogear.android.impl.pipeline.loader.support.SupportReadLoader;
@@ -51,7 +44,6 @@ import org.jboss.aerogear.android.impl.pipeline.loader.support.SupportSaveLoader
 import org.jboss.aerogear.android.pipeline.LoaderPipe;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
-import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 

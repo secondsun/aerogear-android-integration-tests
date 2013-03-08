@@ -17,7 +17,22 @@
 
 package org.jboss.aerogear.android.authentication.impl;
 
-import android.test.ActivityInstrumentationTestCase2;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import junit.framework.Assert;
+
+import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
@@ -26,20 +41,11 @@ import org.jboss.aerogear.android.http.HttpProvider;
 import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
-import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import junit.framework.Assert;
-import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
+import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
 import org.mockito.ArgumentCaptor;
 
-import static org.mockito.Mockito.*;
+import android.test.ActivityInstrumentationTestCase2;
 
 public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTestCase2<MainActivity> implements AuthenticationModuleTest {
 

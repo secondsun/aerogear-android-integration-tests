@@ -17,19 +17,20 @@
 
 package org.jboss.aerogear.android.impl.datamanager;
 
-import android.test.ActivityInstrumentationTestCase2;
+import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.MEMORY;
+import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.SQL;
+
 import java.net.MalformedURLException;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.DataManager;
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.datamanager.StoreFactory;
-import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.*;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 public class DataManagerTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

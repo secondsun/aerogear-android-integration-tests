@@ -15,23 +15,11 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
-import org.jboss.aerogear.android.impl.pipeline.paging.WrappingPagedList;
-import android.graphics.Point;
-import android.test.AndroidTestCase;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import junit.framework.Assert;
-import org.jboss.aerogear.android.http.HeaderAndBody;
-import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.http.HttpStubProvider;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -51,6 +39,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
+
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.Pipeline;
 import org.jboss.aerogear.android.Provider;
@@ -58,14 +48,31 @@ import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.RecordId;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.authentication.AuthorizationFields;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.http.HttpProvider;
 import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
+import org.jboss.aerogear.android.impl.http.HttpStubProvider;
+import org.jboss.aerogear.android.impl.pipeline.paging.WrappingPagedList;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.paging.PageConfig;
 import org.jboss.aerogear.android.pipeline.paging.PagedList;
 import org.json.JSONObject;
-import static org.mockito.Mockito.*;
+
+import android.graphics.Point;
+import android.test.AndroidTestCase;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 public class RestAdapterTest extends AndroidTestCase {
 

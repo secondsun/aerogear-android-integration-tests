@@ -17,14 +17,16 @@
 
 package org.jboss.aerogear.android.authentication.impl;
 
-import android.test.ActivityInstrumentationTestCase2;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

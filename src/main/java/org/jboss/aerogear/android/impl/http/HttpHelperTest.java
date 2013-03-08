@@ -17,11 +17,12 @@
 
 package org.jboss.aerogear.android.impl.http;
 
-import android.test.AndroidTestCase;
+import java.util.HashMap;
+
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpException;
 
-import java.util.HashMap;
+import android.test.AndroidTestCase;
 
 public class HttpHelperTest extends AndroidTestCase {
     private static final byte[] SIMPLE_DATA = { 8, 6, 7, 5, 3, 0, 9 };

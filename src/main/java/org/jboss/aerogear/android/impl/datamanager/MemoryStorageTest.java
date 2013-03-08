@@ -15,12 +15,13 @@
  */
 package org.jboss.aerogear.android.impl.datamanager;
 
-import android.test.ActivityInstrumentationTestCase2;
+import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.MEMORY;
+
 import java.util.Collection;
+
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.datamanager.StoreType;
-import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.MEMORY;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.DataWithNoIdConfigured;
 import org.jboss.aerogear.android.impl.helper.DataWithNoPropertyId;
@@ -28,6 +29,8 @@ import org.jboss.aerogear.android.impl.reflection.PropertyNotFoundException;
 import org.jboss.aerogear.android.impl.reflection.RecordIdNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 public class MemoryStorageTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

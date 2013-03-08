@@ -15,13 +15,13 @@
  */
 package org.jboss.aerogear.android.impl.http;
 
-import android.test.AndroidTestCase;
-import org.jboss.aerogear.android.Provider;
-import org.jboss.aerogear.android.authentication.impl.AuthenticatorTest;
-import org.jboss.aerogear.android.http.HeaderAndBody;
-import org.jboss.aerogear.android.http.HttpException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import static org.jboss.aerogear.android.impl.helper.UnitTestUtils.setPrivateField;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,9 +35,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jboss.aerogear.android.impl.helper.UnitTestUtils.setPrivateField;
+import org.jboss.aerogear.android.Provider;
+import org.jboss.aerogear.android.authentication.impl.AuthenticatorTest;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.http.HttpException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import static org.mockito.Mockito.*;
+import android.test.AndroidTestCase;
 
 public class HttpRestProviderTest extends AndroidTestCase {
 

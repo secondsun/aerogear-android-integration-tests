@@ -18,6 +18,7 @@
 package org.jboss.aerogear.android.impl.http;
 
 import java.net.URL;
+
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpProvider;
 

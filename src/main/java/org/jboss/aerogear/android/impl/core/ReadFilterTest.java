@@ -17,11 +17,12 @@
 
 package org.jboss.aerogear.android.impl.core;
 
-import android.test.ActivityInstrumentationTestCase2;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.ReadFilter;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.test.ActivityInstrumentationTestCase2;
 
 public class ReadFilterTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

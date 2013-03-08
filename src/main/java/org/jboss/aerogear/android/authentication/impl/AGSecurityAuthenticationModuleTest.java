@@ -15,7 +15,16 @@
  */
 package org.jboss.aerogear.android.authentication.impl;
 
-import android.test.ActivityInstrumentationTestCase2;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
+import junit.framework.Assert;
+
+import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.http.HeaderAndBody;
@@ -24,14 +33,7 @@ import org.jboss.aerogear.android.http.HttpProvider;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import junit.framework.Assert;
-import org.jboss.aerogear.MainActivity;
+import android.test.ActivityInstrumentationTestCase2;
 
 public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
 
