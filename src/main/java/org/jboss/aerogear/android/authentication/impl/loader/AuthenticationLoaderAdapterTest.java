@@ -13,7 +13,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jboss.aerogear.android.authentication.impl;
+package org.jboss.aerogear.android.authentication.impl.loader;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -22,10 +22,9 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 import java.util.HashMap;
 import java.util.Map;
-import org.jboss.aerogear.android.authentication.impl.loader.ModernAuthenticationModuleAdapter;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
@@ -130,6 +129,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertEquals("LOGOUT", ((Enum) bundle.get(METHOD_KEY)).name());
         assertEquals(callback, bundle.get(CALLBACK_KEY));
     }
+    
 
     private Map<String, String> makeUserData() {
         Map<String, String> toReturn = new HashMap<String, String>();
