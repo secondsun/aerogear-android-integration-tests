@@ -62,7 +62,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.jboss.aerogear.android.authentication.impl.AuthenticationModuleTest.VoidCallback;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
