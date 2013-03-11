@@ -13,16 +13,24 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jboss.aerogear.android.authentication.impl;
+package org.jboss.aerogear.android.authentication.impl.loader.support;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportAuthenticationModuleAdapter;
+import org.jboss.aerogear.android.authentication.impl.loader.support.SupportEnrollLoader;
+import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLoginLoader;
+import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLogoutLoader;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
@@ -55,7 +63,49 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         bundleMatcher = ArgumentCaptor.forClass(Bundle.class);
 
         when(activity.getSupportLoaderManager()).thenReturn(manager);
+        when(activity.getApplicationContext()).thenReturn(getContext());
         when(fragment.getLoaderManager()).thenReturn(manager);
+    }
+    
+    
+    public void testCreateEnrollLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        Bundle bundle = new Bundle();
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("username", "new User name");
+        Object method = SupportAuthenticationModuleAdapter.Methods.ENROLL;
+        bundle.putSerializable(METHOD_KEY, (Serializable) method);
+        bundle.putSerializable(PARAMS_KEY, data);
+        SupportEnrollLoader loader = (SupportEnrollLoader) authModule.onCreateLoader(-1, bundle);
+        @SuppressWarnings("unchecked")
+		Map<String, String> result = (Map<String, String>) UnitTestUtils.getPrivateField(loader, "params");
+        assertEquals("new User name", result.get("username"));
+    }
+    
+    public void testCreateLoginLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        Bundle bundle = new Bundle();
+        
+        Object method = SupportAuthenticationModuleAdapter.Methods.LOGIN;
+        bundle.putSerializable(METHOD_KEY, (Serializable) method);
+        bundle.putSerializable(USERNAME_KEY, USERNAME);
+        bundle.putSerializable(PASSWORD_KEY, PASSWORD);
+        
+        SupportLoginLoader loader = (SupportLoginLoader) authModule.onCreateLoader(-1, bundle);
+        @SuppressWarnings("unchecked")
+        String username = UnitTestUtils.getPrivateField(loader, "username").toString();
+        String password = UnitTestUtils.getPrivateField(loader, "password").toString();
+        assertEquals(USERNAME, username);
+        assertEquals(PASSWORD, password);
+    }
+    
+    public void testCreateLogoutLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        Bundle bundle = new Bundle();
+        Object method = SupportAuthenticationModuleAdapter.Methods.LOGOUT;
+        bundle.putSerializable(METHOD_KEY, (Serializable) method);
+        SupportLogoutLoader loader = (SupportLogoutLoader) authModule.onCreateLoader(-1, bundle);
+        assertNotNull(loader);
     }
 
     public void testActivityLogin() {
