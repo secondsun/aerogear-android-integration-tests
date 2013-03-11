@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jboss.aerogear.MainFragmentActivity;
-import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.Pipeline;
 import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.ReadFilter;
@@ -63,6 +62,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.jboss.aerogear.android.authentication.impl.AuthenticationModuleTest.VoidCallback;
+import org.jboss.aerogear.android.impl.util.VoidCallback;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -333,19 +334,5 @@ public class SupportLoaderAdapterTest extends
 		}
 	}
 
-	public final static class VoidCallback implements Callback {
-
-		Exception exception;
-
-		@Override
-		public void onSuccess(Object data) {
-
-		}
-
-		@Override
-		public void onFailure(Exception e) {
-			this.exception = e;
-		}
-	}
-
+	
 }

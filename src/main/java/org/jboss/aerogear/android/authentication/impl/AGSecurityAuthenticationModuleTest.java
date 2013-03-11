@@ -34,6 +34,7 @@ import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
 
 import android.test.ActivityInstrumentationTestCase2;
+import org.jboss.aerogear.android.impl.util.VoidCallback;
 
 public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
 
