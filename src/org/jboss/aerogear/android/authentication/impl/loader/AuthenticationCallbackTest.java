@@ -19,7 +19,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.test.AndroidTestCase;
 import java.util.HashMap;
-import org.jboss.aerogear.android.authentication.impl.loader.ModernAuthenticationModuleAdapter.CallbackHandler;
+import org.jboss.aerogear.android.authentication.impl.loader.AuthenticationModuleAdapter.CallbackHandler;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.pipeline.AbstractActivityCallback;
@@ -32,13 +32,13 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
     public void testPassModernFragmentCallbacks() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         Fragment fragment = Mockito.mock(Fragment.class);
 
-        ModernAuthenticationModuleAdapter adapter = new ModernAuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
+        AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
         VoidFragmentCallback fragmentCallback = new VoidFragmentCallback();
-        ModernLoginLoader loader = Mockito.mock(ModernLoginLoader.class);
+        LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(fragmentCallback);
 
         HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
-        ModernAuthenticationModuleAdapter.CallbackHandler handler = new ModernAuthenticationModuleAdapter.CallbackHandler(adapter, loader, data);
+        AuthenticationModuleAdapter.CallbackHandler handler = new AuthenticationModuleAdapter.CallbackHandler(adapter, loader, data);
         handler.run();
         assertTrue(fragmentCallback.successCalled);
         assertNull(UnitTestUtils.getSuperPrivateField(fragmentCallback, "fragment"));
@@ -48,9 +48,9 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
     public void testFailModernFragmentCallbacks() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         Fragment fragment = Mockito.mock(Fragment.class);
 
-        ModernAuthenticationModuleAdapter adapter = new ModernAuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
+        AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
         VoidFragmentCallback fragmentCallback = new VoidFragmentCallback();
-        ModernLoginLoader loader = Mockito.mock(ModernLoginLoader.class);
+        LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(fragmentCallback);
         Mockito.when(loader.hasException()).thenReturn(true);
         Mockito.when(loader.getException()).thenReturn(new RuntimeException("This is only a test exception."));
@@ -66,9 +66,9 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
     public void testPassModernActivityCallbacks() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         Activity activity = Mockito.mock(Activity.class);
 
-        ModernAuthenticationModuleAdapter adapter = new ModernAuthenticationModuleAdapter(activity, null, "ignore");
+        AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(activity, null, "ignore");
         VoidActivityCallback activityCallback = new VoidActivityCallback();
-        ModernLoginLoader loader = Mockito.mock(ModernLoginLoader.class);
+        LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(activityCallback);
 
         HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
@@ -82,9 +82,9 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
     public void testFailModernActivityCallbacks() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         Activity activity = Mockito.mock(Activity.class);
 
-        ModernAuthenticationModuleAdapter adapter = new ModernAuthenticationModuleAdapter(activity, null, "ignore");
+        AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(activity, null, "ignore");
         VoidActivityCallback activityCallback = new VoidActivityCallback();
-        ModernLoginLoader loader = Mockito.mock(ModernLoginLoader.class);
+        LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(activityCallback);
         Mockito.when(loader.hasException()).thenReturn(true);
         Mockito.when(loader.getException()).thenReturn(new RuntimeException("This is only a test exception."));

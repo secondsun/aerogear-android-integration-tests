@@ -53,9 +53,9 @@ import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernReadLoader;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernRemoveLoader;
-import org.jboss.aerogear.android.impl.pipeline.loader.ModernSaveLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.ReadLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.RemoveLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.SaveLoader;
 import org.jboss.aerogear.android.pipeline.LoaderPipe;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
@@ -79,13 +79,13 @@ import com.google.gson.JsonSerializer;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    public ModernLoaderAdapterTest() {
+    public LoaderAdapterTest() {
         super(MainActivity.class);
     }
 
-    private static final String TAG = ModernLoaderAdapterTest.class
+    private static final String TAG = LoaderAdapterTest.class
             .getSimpleName();
     private static final String SERIALIZED_POINTS = "{\"points\":[{\"x\":0,\"y\":0},{\"x\":1,\"y\":2},{\"x\":2,\"y\":4},{\"x\":3,\"y\":6},{\"x\":4,\"y\":8},{\"x\":5,\"y\":10},{\"x\":6,\"y\":12},{\"x\":7,\"y\":14},{\"x\":8,\"y\":16},{\"x\":9,\"y\":18}],\"id\":\"1\"}";
     private URL url;
@@ -102,12 +102,12 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
                 SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
         final HttpStubProvider provider = new HttpStubProvider(url, response);
         PipeConfig config = new PipeConfig(url,
-                ModernLoaderAdapterTest.ListClassId.class);
+                LoaderAdapterTest.ListClassId.class);
         config.setGsonBuilder(builder);
 
         Pipeline pipeline = new Pipeline(url);
 
-        Pipe<ModernLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(ModernLoaderAdapterTest.ListClassId.class, config);
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
 
         Object restRunner = UnitTestUtils.getPrivateField(restPipe,
                 "restRunner");
@@ -119,9 +119,9 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
                     }
                 });
 
-        LoaderPipe<ModernLoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
 
-        List<ModernLoaderAdapterTest.ListClassId> result = runRead(adapter);
+        List<LoaderAdapterTest.ListClassId> result = runRead(adapter);
 
         List<Point> returnedPoints = result.get(0).points;
         Assert.assertEquals(10, returnedPoints.size());
@@ -138,12 +138,12 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
         
         
         PipeConfig config = new PipeConfig(url,
-                ModernLoaderAdapterTest.ListClassId.class);
+                LoaderAdapterTest.ListClassId.class);
         config.setGsonBuilder(builder);
 
         Pipeline pipeline = new Pipeline(url);
 
-        Pipe<ModernLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(ModernLoaderAdapterTest.ListClassId.class, config);
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
 
         Object restRunner = UnitTestUtils.getPrivateField(restPipe,
                 "restRunner");
@@ -155,7 +155,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
                     }
                 });
 
-        LoaderPipe<ModernLoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
 
         runRemove(adapter, "1");
 
@@ -167,7 +167,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
         when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
-        ModernReadLoader loader = new ModernReadLoader(getActivity(), null, handler, null, null){
+        ReadLoader loader = new ReadLoader(getActivity(), null, handler, null, null){
 
             @Override
             public void deliverResult(Object data) {
@@ -198,7 +198,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
         when(handler.onSave(any())).thenReturn(new ArrayList());
-        ModernSaveLoader loader = new ModernSaveLoader(getActivity(), null, handler, null){
+        SaveLoader loader = new SaveLoader(getActivity(), null, handler, null){
 
             @Override
             public void deliverResult(Object data) {
@@ -228,7 +228,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
         when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
-        ModernRemoveLoader loader = new ModernRemoveLoader(getActivity(), null, handler, null){
+        RemoveLoader loader = new RemoveLoader(getActivity(), null, handler, null){
 
             @Override
             public void deliverResult(Object data) {
@@ -282,7 +282,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
             @Override
             public void onFailure(Exception e) {
                 hasException.set(true);
-                Logger.getLogger(ModernLoaderAdapterTest.class.getSimpleName())
+                Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
                         .log(Level.SEVERE, e.getMessage(), e);
                 latch.countDown();
             }
@@ -315,7 +315,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
             @Override
             public void onFailure(Exception e) {
                 hasException.set(true);
-                Logger.getLogger(ModernLoaderAdapterTest.class.getSimpleName())
+                Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
                         .log(Level.SEVERE, e.getMessage(), e);
                 latch.countDown();
             }
@@ -354,7 +354,7 @@ public class ModernLoaderAdapterTest extends ActivityInstrumentationTestCase2<Ma
         filter.setLimit(10);
         filter.setWhere(new JSONObject("{\"model\":\"BMW\"}"));
 
-        ModernLoaderAdapter<Data> adapter = (ModernLoaderAdapter<Data>) pipeline.get("data", getActivity());
+        LoaderAdapter<Data> adapter = (LoaderAdapter<Data>) pipeline.get("data", getActivity());
 
         adapter.readWithFilter(filter, new Callback<List<Data>>() {
 			private static final long serialVersionUID = 1L;

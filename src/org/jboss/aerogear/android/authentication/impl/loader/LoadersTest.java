@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class ModernLoadersTest extends AndroidTestCase {
+public class LoadersTest extends AndroidTestCase {
 
     final HeaderAndBody response = new HeaderAndBody(new byte[]{1, 2, 3, 4}, new HashMap<String, Object>());
     AuthenticationModule module;
@@ -45,7 +45,7 @@ public class ModernLoadersTest extends AndroidTestCase {
     public void testEnrollLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        ModernEnrollLoader loader = new ModernEnrollLoader(mContext, callback, module, params);
+        EnrollLoader loader = new EnrollLoader(mContext, callback, module, params);
         loader.loadInBackground();
         verify(module).enroll(eq(params), any(Callback.class));
     }
@@ -53,7 +53,7 @@ public class ModernLoadersTest extends AndroidTestCase {
     public void testLogoutLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        ModernLogoutLoader loader = new ModernLogoutLoader(mContext, callback, module);
+        LogoutLoader loader = new LogoutLoader(mContext, callback, module);
         loader.loadInBackground();
         verify(module).logout(any(Callback.class));
     }
@@ -61,7 +61,7 @@ public class ModernLoadersTest extends AndroidTestCase {
     public void testLoginLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        ModernLoginLoader loader = new ModernLoginLoader(mContext, callback, module, "username", "password");
+        LoginLoader loader = new LoginLoader(mContext, callback, module, "username", "password");
         loader.loadInBackground();
         verify(module).login(eq("username"), eq("password"), any(Callback.class));
     }

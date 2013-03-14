@@ -59,7 +59,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testActivityLogin() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(activity, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, null, "name");
         authModule.login(USERNAME, PASSWORD, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
@@ -71,7 +71,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testActivityEnroll() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(activity, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, null, "name");
         Map<String, String> userData = makeUserData();
         authModule.enroll(userData, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
@@ -84,7 +84,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testActivityLogout() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(activity, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, null, "name");
         authModule.logout(callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
@@ -95,7 +95,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testFragmentLogin() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(fragment, this.mContext, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(fragment, this.mContext, null, "name");
         authModule.login(USERNAME, PASSWORD, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
@@ -107,7 +107,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testFragmentEnroll() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(fragment, this.mContext, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(fragment, this.mContext, null, "name");
         Map<String, String> userData = makeUserData();
         authModule.enroll(userData, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
@@ -120,7 +120,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testFragmentLogout() {
-        ModernAuthenticationModuleAdapter authModule = new ModernAuthenticationModuleAdapter(fragment, this.mContext, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(fragment, this.mContext, null, "name");
         authModule.logout(callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
