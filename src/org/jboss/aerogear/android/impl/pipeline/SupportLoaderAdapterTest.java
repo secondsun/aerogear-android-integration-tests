@@ -41,6 +41,7 @@ import org.jboss.aerogear.android.impl.pipeline.loader.support.SupportReadLoader
 import org.jboss.aerogear.android.impl.pipeline.loader.support.SupportRemoveLoader;
 import org.jboss.aerogear.android.impl.pipeline.loader.support.SupportSaveLoader;
 import org.jboss.aerogear.android.pipeline.LoaderPipe;
+import static org.jboss.aerogear.android.pipeline.LoaderPipe.*;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.mockito.ArgumentCaptor;
@@ -69,13 +70,7 @@ import org.jboss.aerogear.android.impl.util.VoidCallback;
 public class SupportLoaderAdapterTest extends
 		ActivityInstrumentationTestCase2<MainFragmentActivity> {
 
-	private static final String CALLBACK = "org.jboss.aerogear.android.impl.pipeline.ModernClassLoader.CALLBACK";
-	private static final String METHOD = "org.jboss.aerogear.android.impl.pipeline.ModernClassLoader.METHOD";
-	// private static final String FILTER =
-	// "org.jboss.aerogear.android.impl.pipeline.ModernClassLoader.FILTER";
-	// private static final String ITEM =
-	// "org.jboss.aerogear.android.impl.pipeline.ModernClassLoader.ITEM";
-	private static final String REMOVE_ID = "org.jboss.aerogear.android.impl.pipeline.ModernClassLoader.REMOVIE_ID";
+
 
 	public SupportLoaderAdapterTest() {
 		super(MainFragmentActivity.class);
