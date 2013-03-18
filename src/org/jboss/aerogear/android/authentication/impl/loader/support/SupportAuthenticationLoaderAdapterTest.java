@@ -34,16 +34,12 @@ import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
-
+import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.*;
 public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
 
-    private static final String USERNAME_KEY = "org.jboss.aerogear.android.authentication.loader.ModernAuthenticationModuleAdapter.USERNAME";
-    private static final String PASSWORD_KEY = "org.jboss.aerogear.android.authentication.loader.ModernAuthenticationModuleAdapter.PASSWORD";
-    private static final String PARAMS_KEY = "org.jboss.aerogear.android.authentication.loader.ModernAuthenticationModuleAdapter.PARAMS";
-    private static final String CALLBACK_KEY = "org.jboss.aerogear.android.authentication.loader.ModernAuthenticationModuleAdapter.CALLBACK";
-    private static final String METHOD_KEY = "org.jboss.aerogear.android.authentication.loader.ModernAuthenticationModuleAdapter.METHOD";
-    private static String USERNAME = "testUsername";
-    private static String PASSWORD = "testPassword";
+    
+    private static String USERNAME_VALUE = "testUsername";
+    private static String PASSWORD_VALUE = "testPassword";
     private FragmentActivity activity;
     private Fragment fragment;
     private LoaderManager manager;
@@ -74,8 +70,8 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", "new User name");
         Object method = SupportAuthenticationModuleAdapter.Methods.ENROLL;
-        bundle.putSerializable(METHOD_KEY, (Serializable) method);
-        bundle.putSerializable(PARAMS_KEY, data);
+        bundle.putSerializable(METHOD, (Serializable) method);
+        bundle.putSerializable(PARAMS, data);
         SupportEnrollLoader loader = (SupportEnrollLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
 		Map<String, String> result = (Map<String, String>) UnitTestUtils.getPrivateField(loader, "params");
@@ -87,36 +83,36 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = new Bundle();
         
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGIN;
-        bundle.putSerializable(METHOD_KEY, (Serializable) method);
-        bundle.putSerializable(USERNAME_KEY, USERNAME);
-        bundle.putSerializable(PASSWORD_KEY, PASSWORD);
+        bundle.putSerializable(METHOD, (Serializable) method);
+        bundle.putSerializable(USERNAME, USERNAME_VALUE);
+        bundle.putSerializable(PASSWORD, PASSWORD_VALUE);
         
         SupportLoginLoader loader = (SupportLoginLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
         String username = UnitTestUtils.getPrivateField(loader, "username").toString();
         String password = UnitTestUtils.getPrivateField(loader, "password").toString();
-        assertEquals(USERNAME, username);
-        assertEquals(PASSWORD, password);
+        assertEquals(USERNAME_VALUE, username);
+        assertEquals(PASSWORD_VALUE, password);
     }
     
     public void testCreateLogoutLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
     	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGOUT;
-        bundle.putSerializable(METHOD_KEY, (Serializable) method);
+        bundle.putSerializable(METHOD, (Serializable) method);
         SupportLogoutLoader loader = (SupportLogoutLoader) authModule.onCreateLoader(-1, bundle);
         assertNotNull(loader);
     }
 
     public void testActivityLogin() {
         SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
-        authModule.login(USERNAME, PASSWORD, callback);
+        authModule.login(USERNAME_VALUE, PASSWORD_VALUE, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
-        assertEquals("LOGIN", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(USERNAME, bundle.get(USERNAME_KEY));
-        assertEquals(PASSWORD, bundle.get(PASSWORD_KEY));
+        assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
+        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
 
     }
 
@@ -127,8 +123,8 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
-        assertEquals("ENROLL", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(userData, bundle.get(PARAMS_KEY));
+        assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(userData, bundle.get(PARAMS));
 
 
     }
@@ -140,19 +136,19 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
 
         assertNotNull(bundle);
-        assertEquals("LOGOUT", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(callback, bundle.get(CALLBACK_KEY));
+        assertEquals("LOGOUT", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(callback, bundle.get(CALLBACK));
     }
 
     public void testFragmentLogin() {
         SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(fragment, this.mContext, null, "name");
-        authModule.login(USERNAME, PASSWORD, callback);
+        authModule.login(USERNAME_VALUE, PASSWORD_VALUE, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
-        assertEquals("LOGIN", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(USERNAME, bundle.get(USERNAME_KEY));
-        assertEquals(PASSWORD, bundle.get(PASSWORD_KEY));
+        assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
+        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
 
     }
 
@@ -163,8 +159,8 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
-        assertEquals("ENROLL", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(userData, bundle.get(PARAMS_KEY));
+        assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(userData, bundle.get(PARAMS));
 
 
     }
@@ -176,14 +172,14 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
 
         assertNotNull(bundle);
-        assertEquals("LOGOUT", ((Enum) bundle.get(METHOD_KEY)).name());
-        assertEquals(callback, bundle.get(CALLBACK_KEY));
+        assertEquals("LOGOUT", ((Enum) bundle.get(METHOD)).name());
+        assertEquals(callback, bundle.get(CALLBACK));
     }
 
     private Map<String, String> makeUserData() {
         Map<String, String> toReturn = new HashMap<String, String>();
-        toReturn.put(USERNAME_KEY, USERNAME);
-        toReturn.put(PASSWORD_KEY, PASSWORD);
+        toReturn.put(USERNAME, USERNAME_VALUE);
+        toReturn.put(PASSWORD, PASSWORD_VALUE);
         return toReturn;
     }
 }
