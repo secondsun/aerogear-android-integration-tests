@@ -5,7 +5,7 @@
 
 	<groupId>org.jboss.aerogear</groupId>
 	<artifactId>aerogear-android-integration-tests</artifactId>
-	<version>1.0.0.CR1</version>
+	<version>1.0.0</version>
 	<url>http://aerogear.org</url>
 	<packaging>apk</packaging>
 	<name>AeroGear-Android integration tests</name>
@@ -17,7 +17,7 @@
 	</parent>
 
 	<properties>
-		<aerogear.version>1.0.0.CR1</aerogear.version>
+		<aerogear.version>1.0.0</aerogear.version>
 	</properties>
 
 	<dependencies>
@@ -306,7 +306,7 @@
 											<directory>${project.basedir}/target/unpack/apklibs/org.jboss.aerogear_aerogear-android_apklib_${aerogear.version}/src</directory>
 										</sourceSet>
 										<sourceSet>
-											<directory>${project.basedir}/src/main/java</directory>
+											<directory>${project.basedir}/src</directory>
 										</sourceSet>
 									</sourceSets>
 									<formats>
