@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -502,6 +503,34 @@ public class RestAdapterTest extends AndroidTestCase {
 
     }
 
+    
+    public void testRunTimeout() throws Exception {
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        URL aerogearserverUrl = new URL("https://controller-aerogear.rhcloud.com/aerogear-controller-demo/");
+        PipeConfig config = new PipeConfig(aerogearserverUrl, Data.class);
+        config.setTimeout(1);
+        RestAdapter<Data> adapter = new RestAdapter<Data>(Data.class, aerogearserverUrl, config);
+        final AtomicBoolean onFailCalled = new AtomicBoolean(false);
+        final AtomicReference<Exception> exceptionReference = new AtomicReference<Exception>();
+        adapter.read(new Callback<List<Data>>() {
+            @Override
+            public void onSuccess(List<Data> data) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                onFailCalled.set(true);
+                exceptionReference.set(e);
+                latch.countDown();
+            }
+        });
+        latch.await(500, TimeUnit.MILLISECONDS);
+        assertTrue(onFailCalled.get());
+        assertEquals(SocketTimeoutException.class, exceptionReference.get().getCause().getClass());
+    }
+    
     private <T> List<T> runRead(Pipe<T> restPipe) throws InterruptedException {
         return runRead(restPipe, null);
     }
