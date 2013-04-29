@@ -51,6 +51,7 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpProvider;
 import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
+import org.jboss.aerogear.android.impl.helper.ObjectVarArgsMatcher;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpStubProvider;
 import org.jboss.aerogear.android.impl.pipeline.loader.ReadLoader;
@@ -61,6 +62,7 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import android.annotation.TargetApi;
 import android.graphics.Point;
@@ -373,16 +375,8 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        ArgumentCaptor<Object> urlArg = ArgumentCaptor.forClass(Object.class);
+        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token"), Integer.MAX_VALUE)));
 
-        verify(factory).get(urlArg.capture());
-        if (urlArg.getValue() instanceof URL) {
-            Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", urlArg.getValue().toString());
-        } else if (urlArg.getValue() instanceof Object[]) {
-            Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", ((Object[]) urlArg.getValue())[0].toString());
-        } else {
-            fail("Unknown parameter type");
-        }
 
     }
 

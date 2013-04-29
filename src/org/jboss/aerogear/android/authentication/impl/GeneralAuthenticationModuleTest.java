@@ -40,10 +40,14 @@ import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.http.HttpProvider;
 import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
+import org.jboss.aerogear.android.impl.helper.ObjectVarArgsMatcher;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
 import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.verification.VerificationMode;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -98,16 +102,8 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
         });
 
         latch.await(1, TimeUnit.SECONDS);
-        ArgumentCaptor urlArg = ArgumentCaptor.forClass(Object.class);
 
-        verify(factory).get(urlArg.capture());
-        if (urlArg.getValue() instanceof URL) {
-            Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue().toString());
-        } else if (urlArg.getValue() instanceof Object[]) {
-            Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, ((Object[]) urlArg.getValue())[0].toString());
-        } else {
-            fail("Unknown parameter type");
-        }
+        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(SIMPLE_URL.toString() + "?token=" + TOKEN), Integer.MAX_VALUE)));
     }
 
     public void testAbstractMethodsThrowExceptions() throws InterruptedException {

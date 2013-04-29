@@ -17,10 +17,12 @@ package org.jboss.aerogear.android.authentication.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 
@@ -39,6 +41,7 @@ import org.jboss.aerogear.android.impl.util.VoidCallback;
 public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
 
     private static final URL SIMPLE_URL;
+    private static final URL LIVE_URL;
 
     public AGSecurityAuthenticationModuleTest() {
         super(MainActivity.class);
@@ -47,6 +50,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
     static {
         try {
             SIMPLE_URL = new URL("http://localhost:8080/todo-server");
+            LIVE_URL = new URL("https://controller-aerogear.rhcloud.com/aerogear-controller-demo/");
         } catch (MalformedURLException ex) {
             throw new IllegalStateException(ex);
         }
@@ -56,8 +60,8 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 SIMPLE_URL, new AGSecurityAuthenticationConfig());
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
-        HttpProvider provider = (HttpProvider) UnitTestUtils.getPrivateField(runner,
-                "httpProviderFactory", Provider.class).get(SIMPLE_URL);
+        HttpProvider provider = (HttpProvider) UnitTestUtils.getPrivateField(
+                runner, "httpProviderFactory", Provider.class).get(SIMPLE_URL);
         Assert.assertEquals(SIMPLE_URL, provider.getUrl());
 
         Assert.assertEquals(SIMPLE_URL, module.getBaseURL());
@@ -88,20 +92,20 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
+            @Override
+            public HttpProvider get(Object... in) {
+                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HttpProvider get(Object... in) {
-                        return new HttpStubProvider(SIMPLE_URL) {
-                            @Override
-                            public HeaderAndBody post(String ignore)
-                                    throws RuntimeException {
-                                try {
-                                    throw new HttpException(new byte[1], 403);
-                                } finally {
-                                }
-                            }
-                        };
+                    public HeaderAndBody post(String ignore)
+                            throws RuntimeException {
+                        try {
+                            throw new HttpException(new byte[1], 403);
+                        } finally {
+                        }
                     }
-                });
+                };
+            }
+        });
 
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
@@ -120,21 +124,20 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
+            @Override
+            public HttpProvider get(Object... in) {
+                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HttpProvider get(Object... in) {
-                        return new HttpStubProvider(SIMPLE_URL) {
-                            @Override
-                            public HeaderAndBody post(String ignore)
-                                    throws RuntimeException {
-                                HashMap<String, Object> headers = new HashMap<String, Object>();
-                                headers.put("Auth-Token", TOKEN);
-                                return new HeaderAndBody(new byte[1],
-                                        headers);
+                    public HeaderAndBody post(String ignore)
+                            throws RuntimeException {
+                        HashMap<String, Object> headers = new HashMap<String, Object>();
+                        headers.put("Auth-Token", TOKEN);
+                        return new HeaderAndBody(new byte[1], headers);
 
-                            }
-                        };
                     }
-                });
+                };
+            }
+        });
 
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
@@ -153,21 +156,20 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
+            @Override
+            public HttpProvider get(Object... in) {
+                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HttpProvider get(Object... in) {
-                        return new HttpStubProvider(SIMPLE_URL) {
-                            @Override
-                            public HeaderAndBody post(String enrollData)
-                                    throws RuntimeException {
-                                HashMap<String, Object> headers = new HashMap<String, Object>();
-                                headers.put("Auth-Token", TOKEN);
-                                return new HeaderAndBody(new byte[1],
-                                        headers);
+                    public HeaderAndBody post(String enrollData)
+                            throws RuntimeException {
+                        HashMap<String, Object> headers = new HashMap<String, Object>();
+                        headers.put("Auth-Token", TOKEN);
+                        return new HeaderAndBody(new byte[1], headers);
 
-                            }
-                        };
                     }
-                });
+                };
+            }
+        });
         SimpleCallback callback = new SimpleCallback(latch);
 
         Map<String, String> userData = new HashMap<String, String>();
@@ -195,24 +197,24 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
+            @Override
+            public HttpProvider get(Object... in) {
+                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HttpProvider get(Object... in) {
-                        return new HttpStubProvider(SIMPLE_URL) {
-                            @Override
-                            public HeaderAndBody post(String ignore)
-                                    throws RuntimeException {
-                                try {
-                                    HashMap<String, Object> headers = new HashMap<String, Object>();
-                                    headers.put("Auth-Token", TOKEN);
-                                    return new HeaderAndBody(new byte[1],
-                                            headers);
-                                } finally {
-                                    latch.countDown();
-                                }
-                            }
-                        };
+                    public HeaderAndBody post(String ignore)
+                            throws RuntimeException {
+                        try {
+                            HashMap<String, Object> headers = new HashMap<String, Object>();
+                            headers.put("Auth-Token", TOKEN);
+                            return new HeaderAndBody(new byte[1],
+                                    headers);
+                        } finally {
+                            latch.countDown();
+                        }
                     }
-                });
+                };
+            }
+        });
 
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
 
@@ -228,24 +230,24 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         final CountDownLatch latch2 = new CountDownLatch(1);
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
+            @Override
+            public HttpProvider get(Object... in) {
+                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HttpProvider get(Object... in) {
-                        return new HttpStubProvider(SIMPLE_URL) {
-                            @Override
-                            public HeaderAndBody post(String ignore)
-                                    throws RuntimeException {
-                                try {
-                                    HashMap<String, Object> headers = new HashMap<String, Object>();
+                    public HeaderAndBody post(String ignore)
+                            throws RuntimeException {
+                        try {
+                            HashMap<String, Object> headers = new HashMap<String, Object>();
 
-                                    return new HeaderAndBody(new byte[1],
-                                            headers);
-                                } finally {
-                                    latch2.countDown();
-                                }
-                            }
-                        };
+                            return new HeaderAndBody(new byte[1],
+                                    headers);
+                        } finally {
+                            latch2.countDown();
+                        }
                     }
-                });
+                };
+            }
+        });
 
         module.logout(voidCallback);
 
@@ -255,6 +257,75 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
 
         Assert.assertFalse(module.isLoggedIn());
         Assert.assertEquals("", module.getAuthToken());
+
+    }
+
+    public void testLoginTimeout() throws IOException, NoSuchFieldException,
+            InterruptedException, IllegalArgumentException,
+            IllegalAccessException {
+        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        config.setTimeout(1);
+
+        AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
+                LIVE_URL, config);
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        SimpleCallback callback = new SimpleCallback();
+        module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
+
+        latch.await(500, TimeUnit.MILLISECONDS);
+
+        Assert.assertNotNull(callback.exception);
+        Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
+    }
+
+    public void testEnrollTimeout() throws Exception {
+        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        config.setTimeout(1);
+
+        AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
+                LIVE_URL, config);
+
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        SimpleCallback callback = new SimpleCallback();
+
+        Map<String, String> userData = new HashMap<String, String>();
+        userData.put("username", PASSING_USERNAME);
+        userData.put("password", ENROLL_PASSWORD);
+        userData.put("firstname", "Summers");
+        userData.put("lastname", "Pittman");
+        userData.put("role", "admin");
+
+        module.enroll(userData, callback);
+
+
+        latch.await(500, TimeUnit.MILLISECONDS);
+
+        Assert.assertNotNull(callback.exception);
+        Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
+
+    }
+
+    public void testLogoutTimesout() throws Exception {
+        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        config.setTimeout(1);
+
+        AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
+                LIVE_URL, config);
+
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        VoidCallback callback = new VoidCallback();
+        module.logout(callback);
+
+        latch.await(500, TimeUnit.MILLISECONDS);
+
+        Assert.assertNotNull(callback.exception);
+        Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
 
     }
 }
