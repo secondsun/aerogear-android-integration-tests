@@ -44,6 +44,7 @@ import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
 import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -100,7 +101,7 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
         latch.await(1, TimeUnit.SECONDS);
         ArgumentCaptor urlArg = ArgumentCaptor.forClass(Object.class);
 
-        verify(factory).get(urlArg.capture());
+        verify(factory).get(urlArg.capture(), Mockito.eq(Integer.MAX_VALUE));
         if (urlArg.getValue() instanceof URL) {
             Assert.assertEquals(SIMPLE_URL.toString() + "?token=" + TOKEN, urlArg.getValue().toString());
         } else if (urlArg.getValue() instanceof Object[]) {

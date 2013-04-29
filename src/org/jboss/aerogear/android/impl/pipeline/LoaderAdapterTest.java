@@ -61,6 +61,7 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import android.annotation.TargetApi;
 import android.graphics.Point;
@@ -375,7 +376,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
 
         ArgumentCaptor<Object> urlArg = ArgumentCaptor.forClass(Object.class);
 
-        verify(factory).get(urlArg.capture());
+        verify(factory).get(urlArg.capture(), Mockito.eq(Integer.MAX_VALUE));
         if (urlArg.getValue() instanceof URL) {
             Assert.assertEquals(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token", urlArg.getValue().toString());
         } else if (urlArg.getValue() instanceof Object[]) {
