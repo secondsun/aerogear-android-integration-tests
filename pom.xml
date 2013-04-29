@@ -17,7 +17,7 @@
 	</parent>
 
 	<properties>
-		<aerogear.version>1.0.0</aerogear.version>
+		<aerogear.version>1.0.1-SNAPSHOT</aerogear.version>
 	</properties>
 
 	<dependencies>
