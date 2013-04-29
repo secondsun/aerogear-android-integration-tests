@@ -15,6 +15,18 @@
  */
 package org.jboss.aerogear.android.authentication.impl;
 
+import android.test.ActivityInstrumentationTestCase2;
+import junit.framework.Assert;
+import org.jboss.aerogear.MainActivity;
+import org.jboss.aerogear.android.Provider;
+import org.jboss.aerogear.android.authentication.AuthenticationConfig;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.http.HttpException;
+import org.jboss.aerogear.android.http.HttpProvider;
+import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
+import org.jboss.aerogear.android.impl.http.HttpStubProvider;
+import org.jboss.aerogear.android.impl.util.VoidCallback;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -23,20 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import junit.framework.Assert;
-
-import org.jboss.aerogear.MainActivity;
-import org.jboss.aerogear.android.Provider;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
-import org.jboss.aerogear.android.http.HeaderAndBody;
-import org.jboss.aerogear.android.http.HttpException;
-import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
-import org.jboss.aerogear.android.impl.http.HttpStubProvider;
-
-import android.test.ActivityInstrumentationTestCase2;
-import org.jboss.aerogear.android.impl.util.VoidCallback;
 
 public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
 
@@ -58,7 +56,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
 
     public void testDefaultConstructor() throws Exception {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, new AGSecurityAuthenticationConfig());
+                SIMPLE_URL, new AuthenticationConfig());
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         HttpProvider provider = (HttpProvider) UnitTestUtils.getPrivateField(
                 runner, "httpProviderFactory", Provider.class).get(SIMPLE_URL);
@@ -68,26 +66,9 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
 
     }
 
-    public void testApplySecurityToken() throws Exception {
-        String newTokenName = "USER_TOKEN";
-
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
-        config.setTokenHeaderName(newTokenName);
-
-        AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, config);
-        UnitTestUtils.setPrivateField(module, "authToken", TOKEN);
-
-        AuthorizationFields fields = module.getAuthorizationFields();
-
-        Assert.assertEquals(newTokenName, fields.getHeaders().get(0).first);
-        Assert.assertEquals(TOKEN, fields.getHeaders().get(0).second);
-
-    }
-
     public void testLoginFails() throws Exception {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, new AGSecurityAuthenticationConfig());
+                SIMPLE_URL, new AuthenticationConfig());
         final CountDownLatch latch = new CountDownLatch(1);
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
@@ -119,7 +100,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
             InterruptedException, IllegalArgumentException,
             IllegalAccessException {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, new AGSecurityAuthenticationConfig());
+                SIMPLE_URL, new AuthenticationConfig());
         final CountDownLatch latch = new CountDownLatch(1);
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
@@ -131,7 +112,6 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
                     public HeaderAndBody post(String ignore)
                             throws RuntimeException {
                         HashMap<String, Object> headers = new HashMap<String, Object>();
-                        headers.put("Auth-Token", TOKEN);
                         return new HeaderAndBody(new byte[1], headers);
 
                     }
@@ -146,12 +126,11 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
         Assert.assertTrue(module.isLoggedIn());
-        Assert.assertEquals(TOKEN, module.getAuthToken());
     }
 
     public void testEnrollSucceeds() throws Exception {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, new AGSecurityAuthenticationConfig());
+                SIMPLE_URL, new AuthenticationConfig());
         final CountDownLatch latch = new CountDownLatch(1);
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
@@ -163,7 +142,6 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
                     public HeaderAndBody post(String enrollData)
                             throws RuntimeException {
                         HashMap<String, Object> headers = new HashMap<String, Object>();
-                        headers.put("Auth-Token", TOKEN);
                         return new HeaderAndBody(new byte[1], headers);
 
                     }
@@ -185,12 +163,11 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Assert.assertNotNull(callback.data);
 
         Assert.assertTrue(module.isLoggedIn());
-        Assert.assertEquals(TOKEN, module.getAuthToken());
     }
 
     public void testLogoutSucceeds() throws Exception {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
-                SIMPLE_URL, new AGSecurityAuthenticationConfig());
+                SIMPLE_URL, new AuthenticationConfig());
         SimpleCallback callback = new SimpleCallback();
 
         final CountDownLatch latch = new CountDownLatch(1);
@@ -205,7 +182,6 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
                             throws RuntimeException {
                         try {
                             HashMap<String, Object> headers = new HashMap<String, Object>();
-                            headers.put("Auth-Token", TOKEN);
                             return new HeaderAndBody(new byte[1],
                                     headers);
                         } finally {
@@ -223,7 +199,6 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
         Assert.assertTrue(module.isLoggedIn());
-        Assert.assertEquals(TOKEN, module.getAuthToken());
 
         VoidCallback voidCallback = new VoidCallback();
 
@@ -256,14 +231,12 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         Assert.assertNull(voidCallback.exception);
 
         Assert.assertFalse(module.isLoggedIn());
-        Assert.assertEquals("", module.getAuthToken());
-
     }
 
     public void testLoginTimeout() throws IOException, NoSuchFieldException,
             InterruptedException, IllegalArgumentException,
             IllegalAccessException {
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        AuthenticationConfig config = new AuthenticationConfig();
         config.setTimeout(1);
 
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
@@ -281,7 +254,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
     }
 
     public void testEnrollTimeout() throws Exception {
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        AuthenticationConfig config = new AuthenticationConfig();
         config.setTimeout(1);
 
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
@@ -310,7 +283,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
     }
 
     public void testLogoutTimesout() throws Exception {
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        AuthenticationConfig config = new AuthenticationConfig();
         config.setTimeout(1);
 
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(

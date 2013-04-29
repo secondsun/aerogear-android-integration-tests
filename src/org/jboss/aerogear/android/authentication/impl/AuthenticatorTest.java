@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.aerogear.MainActivity;
+import org.jboss.aerogear.android.authentication.AuthenticationConfig;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 
@@ -56,7 +57,7 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
     public void testAddAuthenticatorFailsWithUnsupportedType() {
         try {
             Authenticator authenticator = new Authenticator(SIMPLE_URL);
-            AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+            AuthenticationConfig config = new AuthenticationConfig();
             config.setAuthType(null);
             AuthenticationModule simpleAuthModule = authenticator.auth(
                     SIMPLE_MODULE_NAME, config);
@@ -72,7 +73,7 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
 
         Authenticator authenticator = new Authenticator(SIMPLE_URL);
         AuthenticationModule simpleAuthModule = authenticator.auth(
-                SIMPLE_MODULE_NAME, new AGSecurityAuthenticationConfig());
+                SIMPLE_MODULE_NAME, new AuthenticationConfig());
 
         assertNotNull(simpleAuthModule);
 
@@ -81,7 +82,7 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
     public void testAddAndGetSimpleAuthenticator() {
         Authenticator authenticator = new Authenticator(SIMPLE_URL);
         AuthenticationModule simpleAuthModule = authenticator.auth(
-                SIMPLE_MODULE_NAME, new AGSecurityAuthenticationConfig());
+                SIMPLE_MODULE_NAME, new AuthenticationConfig());
         assertEquals(simpleAuthModule, authenticator.get(SIMPLE_MODULE_NAME));
         authenticator.remove(SIMPLE_MODULE_NAME);
         assertNull(authenticator.get(SIMPLE_MODULE_NAME));
@@ -91,7 +92,7 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
 
         Authenticator authenticator = new Authenticator(SIMPLE_URL);
 
-        AGSecurityAuthenticationConfig config = new AGSecurityAuthenticationConfig();
+        AuthenticationConfig config = new AuthenticationConfig();
         config.setAuthType(AuthTypes.AG_SECURITY);
         config.setEnrollEndpoint("testEnroll");
         config.setLoginEndpoint("testLogin");

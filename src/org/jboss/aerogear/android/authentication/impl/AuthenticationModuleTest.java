@@ -24,14 +24,9 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * This interface sets up all of the static values for 
- * {@link RestAuthenticationModuleTest}
+ * {@link AGSecurityAuthenticationModuleTest}
  */
 public interface AuthenticationModuleTest {
-
-    /**
-     * Default AUTH Token
-     */
-    static final String TOKEN = "a016b29b-da74-4833-aa50-43c55788c528";
 
     static final String PASSING_USERNAME = "spittman";
     static final String FAILING_USERNAME = "fail";

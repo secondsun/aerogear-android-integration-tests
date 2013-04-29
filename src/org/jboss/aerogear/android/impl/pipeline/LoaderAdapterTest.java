@@ -326,20 +326,16 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         latch.await(2, TimeUnit.SECONDS);
         Assert.assertFalse(hasException.get());
     }
-    
-    public void testRunReadWithFilterAndAuthenticaiton() throws Exception {
+
+    public void testRunReadWithFilter() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
 
         HttpProviderFactory factory = mock(HttpProviderFactory.class);
         when(factory.get(anyObject())).thenReturn(mock(HttpProvider.class));
 
-        AuthorizationFields authFields = new AuthorizationFields();
-        authFields.addQueryParameter("token", "token");
-
         AuthenticationModule urlModule = mock(AuthenticationModule.class);
         when(urlModule.isLoggedIn()).thenReturn(true);
-        when(urlModule.getAuthorizationFields()).thenReturn(authFields);
 
         PipeConfig config = new PipeConfig(url, Data.class);
         config.setAuthModule(urlModule);
@@ -375,8 +371,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token"), Integer.MAX_VALUE)));
-
+        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"), Integer.MAX_VALUE)));
 
     }
 
