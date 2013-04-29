@@ -334,11 +334,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         HttpProviderFactory factory = mock(HttpProviderFactory.class);
         when(factory.get(anyObject())).thenReturn(mock(HttpProvider.class));
 
-        AuthenticationModule urlModule = mock(AuthenticationModule.class);
-        when(urlModule.isLoggedIn()).thenReturn(true);
-
         PipeConfig config = new PipeConfig(url, Data.class);
-        config.setAuthModule(urlModule);
         config.setEndpoint("");
 
         Pipeline pipeline = new Pipeline(url);
@@ -355,9 +351,9 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         LoaderAdapter<Data> adapter = (LoaderAdapter<Data>) pipeline.get("data", getActivity());
 
         adapter.readWithFilter(filter, new Callback<List<Data>>() {
-			private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public void onSuccess(List<Data> data) {
                 latch.countDown();
             }
