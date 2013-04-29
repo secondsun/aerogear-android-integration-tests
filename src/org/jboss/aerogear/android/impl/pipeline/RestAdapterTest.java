@@ -314,7 +314,7 @@ public class RestAdapterTest extends AndroidTestCase {
         UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory", factory);
 
         ReadFilter filter = new ReadFilter();
-        filter.setLinkUri(URI.create("?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token"));
+        filter.setLinkUri(URI.create("?limit=10&where=%7B%22model%22:%22BMW%22%7D"));
 
         adapter.readWithFilter(filter, new Callback<List<Data>>() {
             @Override
@@ -329,10 +329,10 @@ public class RestAdapterTest extends AndroidTestCase {
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(eq(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token")));
+        verify(factory).get(eq(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D")));
     }
 
-    public void runReadWithFilterAndAuthenticaiton() throws Exception {
+    public void runReadWithFilter() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -340,7 +340,6 @@ public class RestAdapterTest extends AndroidTestCase {
         when(factory.get(anyObject())).thenReturn(mock(HttpProvider.class));
 
         AuthorizationFields authFields = new AuthorizationFields();
-        authFields.addQueryParameter("token", "token");
 
         AuthenticationModule urlModule = mock(AuthenticationModule.class);
         when(urlModule.isLoggedIn()).thenReturn(true);
@@ -372,7 +371,7 @@ public class RestAdapterTest extends AndroidTestCase {
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D&token=token"));
+        verify(factory).get(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"));
     }
 
     /**

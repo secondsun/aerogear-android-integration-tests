@@ -17,39 +17,20 @@
 
 package org.jboss.aerogear.android.authentication.impl;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
-
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
-import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
-import org.jboss.aerogear.android.impl.helper.Data;
-import org.jboss.aerogear.android.impl.helper.ObjectVarArgsMatcher;
-import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
-import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
-import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.internal.verification.VerificationModeFactory;
-import org.mockito.verification.VerificationMode;
 
-import android.test.ActivityInstrumentationTestCase2;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.mock;
 
 public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTestCase2<MainActivity> implements AuthenticationModuleTest {
 
@@ -65,45 +46,6 @@ public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTest
         } catch (MalformedURLException ex) {
             throw new IllegalStateException(ex);
         }
-    }
-
-    public void testApplySecurityTokenOnURL() throws Exception {
-
-        final CountDownLatch latch = new CountDownLatch(1);
-
-        HttpProviderFactory factory = mock(HttpProviderFactory.class);
-        when(factory.get(anyObject())).thenReturn(mock(HttpProvider.class));
-
-        AuthorizationFields authFields = new AuthorizationFields();
-        authFields.addQueryParameter("token", TOKEN);
-
-        AuthenticationModule urlModule = mock(AuthenticationModule.class);
-        when(urlModule.isLoggedIn()).thenReturn(true);
-        when(urlModule.getAuthorizationFields()).thenReturn(authFields);
-
-        PipeConfig config = new PipeConfig(SIMPLE_URL, Data.class);
-        config.setAuthModule(urlModule);
-
-        RestAdapter<Data> adapter = new RestAdapter<Data>(Data.class, SIMPLE_URL, config);
-        Object restRunner = UnitTestUtils.getPrivateField(adapter, "restRunner");
-        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory", factory);
-
-        adapter.read(new Callback<List<Data>>() {
-
-            @Override
-            public void onSuccess(List<Data> data) {
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                latch.countDown();
-            }
-        });
-
-        latch.await(1, TimeUnit.SECONDS);
-
-        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(SIMPLE_URL.toString() + "?token=" + TOKEN), Integer.MAX_VALUE)));
     }
 
     public void testAbstractMethodsThrowExceptions() throws InterruptedException {

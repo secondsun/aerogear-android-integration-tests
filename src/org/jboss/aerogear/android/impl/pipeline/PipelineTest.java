@@ -21,8 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.aerogear.android.Pipeline;
+import org.jboss.aerogear.android.authentication.AuthenticationConfig;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
-import org.jboss.aerogear.android.authentication.impl.AGSecurityAuthenticationConfig;
 import org.jboss.aerogear.android.authentication.impl.AGSecurityAuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
@@ -185,7 +185,7 @@ public class PipelineTest extends AndroidTestCase {
         DefaultPipeFactory factory = new DefaultPipeFactory();
         PipeConfig config = new PipeConfig(url, Data.class);
         config.setAuthModule(new AGSecurityAuthenticationModule(url,
-                new AGSecurityAuthenticationConfig()));
+                new AuthenticationConfig()));
         RestAdapter<Data> pipe = (RestAdapter<Data>) factory.createPipe(
                 Data.class, config);
         Object restRunner = UnitTestUtils.getPrivateField(pipe, "restRunner");
