@@ -1,7 +1,7 @@
 language: java
 env:
     matrix:
-    - ANDROID_SDKS=android-17           ANDROID_TARGET=android-17  ANDROID_ABI=armeabi
+    - ANDROID_SDKS=android-17           ANDROID_TARGET=android-17  ANDROID_ABI=armeabi-v7a
 before_install:
   # download the latest android sdk and unzip
   - sudo apt-get update -qq
