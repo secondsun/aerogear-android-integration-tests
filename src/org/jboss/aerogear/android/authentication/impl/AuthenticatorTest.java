@@ -28,6 +28,7 @@ import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 
 import android.test.ActivityInstrumentationTestCase2;
+import org.jboss.aerogear.android.authentication.AuthType;
 
 public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -58,7 +59,14 @@ public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActi
         try {
             Authenticator authenticator = new Authenticator(SIMPLE_URL);
             AuthenticationConfig config = new AuthenticationConfig();
-            config.setAuthType(null);
+            config.setAuthType(new AuthType() {
+				
+				@Override
+				public String getName() {
+					return "SimpleAuthType";
+				}
+			});
+
             AuthenticationModule simpleAuthModule = authenticator.auth(
                     SIMPLE_MODULE_NAME, config);
 
