@@ -373,7 +373,7 @@ public class RestAdapterTest extends AndroidTestCase {
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"));
+        verify(factory).get(new URL(url.toString() + "?limit=10&model=BMW"));
     }
 
     /**

@@ -367,7 +367,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"), Integer.MAX_VALUE)));
+        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&model=BMW"), Integer.MAX_VALUE)));
 
     }
 
