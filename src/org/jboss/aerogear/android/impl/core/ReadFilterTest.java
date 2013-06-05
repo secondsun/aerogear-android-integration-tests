@@ -39,7 +39,7 @@ public class ReadFilterTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals("?limit=1&offset=2", filter.getQuery());
 
         filter.setWhere(new JSONObject("{\"model\":\"BMW\"}"));
-        assertEquals("?limit=1&offset=2&where=%7B%22model%22:%22BMW%22%7D", filter.getQuery());
+        assertEquals("?limit=1&offset=2&model=BMW", filter.getQuery());
 
     }
 
