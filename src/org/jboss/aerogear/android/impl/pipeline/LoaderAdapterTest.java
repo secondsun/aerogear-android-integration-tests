@@ -272,7 +272,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         final AtomicBoolean hasException = new AtomicBoolean(false);
         final AtomicReference<List<T>> resultRef = new AtomicReference<List<T>>();
 
-        restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
+        restPipe.read(readFilter, new Callback<List<T>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -350,7 +350,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
 
         LoaderAdapter<Data> adapter = (LoaderAdapter<Data>) pipeline.get("data", getActivity());
 
-        adapter.readWithFilter(filter, new Callback<List<Data>>() {
+        adapter.read(filter, new Callback<List<Data>>() {
             private static final long serialVersionUID = 1L;
 
             @Override
