@@ -59,6 +59,10 @@ public class StubPipeFactory implements PipeFactory {
             }
 
             @Override
+            public void read(ReadFilter filer, Callback callback) {
+            }
+            
+            @Override
             public void readWithFilter(ReadFilter filer, Callback callback) {
             }
 
