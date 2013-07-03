@@ -23,6 +23,12 @@ before_install:
   - mvn install -N --quiet
   - cd ../../..
 
+  # Checkout AeroGear Android
+  - git clone git://github.com/aerogear/aerogear-android.git
+  - cd $PWD/aerogear-android
+  - mvn install -N --quiet
+  - cd ..
+
   # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
