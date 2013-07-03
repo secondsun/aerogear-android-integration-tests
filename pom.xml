@@ -47,7 +47,7 @@
         <version.com.googlecode.maven.java.formatter>0.3.1</version.com.googlecode.maven.java.formatter>
         <version.com.jayway.maven.plugins.android.generation2>3.6.0</version.com.jayway.maven.plugins.android.generation2>
         <version.emma>2.1.5320</version.emma>
-        <android.target.sdk.platform>16</android.target.sdk.platform>
+        <android.target.sdk.platform>17</android.target.sdk.platform>
     </properties>
 
     <dependencies>
