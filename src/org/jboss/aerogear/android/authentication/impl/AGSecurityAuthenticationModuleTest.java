@@ -60,8 +60,8 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 SIMPLE_URL, new AuthenticationConfig());
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
-        HttpProvider provider = (HttpProvider) UnitTestUtils.getPrivateField(
-                runner, "httpProviderFactory", Provider.class).get(SIMPLE_URL);
+        HttpProvider provider = (HttpProvider) ((Provider)UnitTestUtils.getSuperPrivateField(
+                runner, "httpProviderFactory")).get(SIMPLE_URL);
         Assert.assertEquals(SIMPLE_URL, provider.getUrl());
 
         Assert.assertEquals(SIMPLE_URL, module.getBaseURL());
@@ -246,10 +246,10 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
 
         final CountDownLatch latch = new CountDownLatch(1);
 
-        SimpleCallback callback = new SimpleCallback();
+        SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
 
-        latch.await(500, TimeUnit.MILLISECONDS);
+        latch.await(5000, TimeUnit.MILLISECONDS);
 
         Assert.assertNotNull(callback.exception);
         Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
@@ -265,7 +265,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
 
         final CountDownLatch latch = new CountDownLatch(1);
 
-        SimpleCallback callback = new SimpleCallback();
+        SimpleCallback callback = new SimpleCallback(latch);
 
         Map<String, String> userData = new HashMap<String, String>();
         userData.put("username", PASSING_USERNAME);
@@ -277,7 +277,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         module.enroll(userData, callback);
 
 
-        latch.await(500, TimeUnit.MILLISECONDS);
+        latch.await(50000, TimeUnit.MILLISECONDS);
 
         Assert.assertNotNull(callback.exception);
         Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
@@ -297,7 +297,7 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         VoidCallback callback = new VoidCallback();
         module.logout(callback);
 
-        latch.await(500, TimeUnit.MILLISECONDS);
+        latch.await(5000, TimeUnit.MILLISECONDS);
 
         Assert.assertNotNull(callback.exception);
         Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());

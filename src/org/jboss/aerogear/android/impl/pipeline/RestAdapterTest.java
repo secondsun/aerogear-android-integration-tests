@@ -527,7 +527,7 @@ public class RestAdapterTest extends AndroidTestCase {
                 latch.countDown();
             }
         });
-        latch.await(500, TimeUnit.MILLISECONDS);
+        latch.await(50000, TimeUnit.MILLISECONDS);
         assertTrue(onFailCalled.get());
         assertEquals(SocketTimeoutException.class, exceptionReference.get().getCause().getClass());
     }
