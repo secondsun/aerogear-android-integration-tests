@@ -272,7 +272,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         final AtomicBoolean hasException = new AtomicBoolean(false);
         final AtomicReference<List<T>> resultRef = new AtomicReference<List<T>>();
 
-        restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
+        restPipe.read(readFilter, new Callback<List<T>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -350,7 +350,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
 
         LoaderAdapter<Data> adapter = (LoaderAdapter<Data>) pipeline.get("data", getActivity());
 
-        adapter.readWithFilter(filter, new Callback<List<Data>>() {
+        adapter.read(filter, new Callback<List<Data>>() {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -367,7 +367,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"), Integer.MAX_VALUE)));
+        verify(factory).get(Mockito.argThat(new ObjectVarArgsMatcher(new URL(url.toString() + "?limit=10&model=BMW"), Integer.MAX_VALUE)));
 
     }
 

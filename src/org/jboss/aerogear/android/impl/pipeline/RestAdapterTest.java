@@ -318,7 +318,7 @@ public class RestAdapterTest extends AndroidTestCase {
         ReadFilter filter = new ReadFilter();
         filter.setLinkUri(URI.create("?limit=10&where=%7B%22model%22:%22BMW%22%7D"));
 
-        adapter.readWithFilter(filter, new Callback<List<Data>>() {
+        adapter.read(filter, new Callback<List<Data>>() {
             @Override
             public void onSuccess(List<Data> data) {
                 latch.countDown();
@@ -359,7 +359,7 @@ public class RestAdapterTest extends AndroidTestCase {
         filter.setLimit(10);
         filter.setWhere(new JSONObject("{\"model\":\"BMW\"}"));
 
-        adapter.readWithFilter(filter, new Callback<List<Data>>() {
+        adapter.read(filter, new Callback<List<Data>>() {
             @Override
             public void onSuccess(List<Data> data) {
                 latch.countDown();
@@ -373,7 +373,7 @@ public class RestAdapterTest extends AndroidTestCase {
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(new URL(url.toString() + "?limit=10&where=%7B%22model%22:%22BMW%22%7D"));
+        verify(factory).get(new URL(url.toString() + "?limit=10&model=BMW"));
     }
 
     /**
@@ -547,7 +547,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final AtomicBoolean hasException = new AtomicBoolean(false);
         final AtomicReference<List<T>> resultRef = new AtomicReference<List<T>>();
 
-        restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
+        restPipe.read(readFilter, new Callback<List<T>>() {
             @Override
             public void onSuccess(List<T> data) {
                 resultRef.set(data);
@@ -578,7 +578,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicBoolean hasException = new AtomicBoolean(false);
         final AtomicReference<Exception> exceptionref = new AtomicReference<Exception>();
-        restPipe.readWithFilter(readFilter, new Callback<List<T>>() {
+        restPipe.read(readFilter, new Callback<List<T>>() {
             @Override
             public void onSuccess(List<T> data) {
                 latch.countDown();
