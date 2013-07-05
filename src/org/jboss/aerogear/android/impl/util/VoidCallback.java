@@ -17,19 +17,34 @@
 
 package org.jboss.aerogear.android.impl.util;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.jboss.aerogear.android.Callback;
 
-    public final class VoidCallback implements Callback {
+public final class VoidCallback implements Callback {
 
-        public Exception exception;
+	public Exception exception;
+	private CountDownLatch latch;
 
-        @Override
-        public void onSuccess(Object data) {
+	public VoidCallback() {
+	}
+	
+	public VoidCallback(CountDownLatch latch) {
+		this.latch = latch;
+	}
 
-        }
+	@Override
+	public void onSuccess(Object data) {
+		if (latch != null) {
+			latch.countDown();
+		}
+	}
 
-        @Override
-        public void onFailure(Exception e) {
-            this.exception = e;
-        }
-    }
+	@Override
+	public void onFailure(Exception e) {
+		if (latch != null) {
+			latch.countDown();
+		}
+		this.exception = e;
+	}
+}
