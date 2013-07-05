@@ -1,5 +1,8 @@
 language: java
 
+notifications:
+  irc: "irc.freenode.org#aerogear"
+
 env:
     matrix:
       - ANDROID_SDKS=android-17,sysimg-17 ANDROID_TARGET=android-17  ANDROID_ABI=armeabi-v7a
