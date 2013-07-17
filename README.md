@@ -1,4 +1,4 @@
-aerogear-android-integration-tests
+aerogear-android-integration-tests [![Build Status](https://travis-ci.org/aerogear/aerogear-android-integration-tests.png)](https://travis-ci.org/aerogear/aerogear-android-integration-tests)
 ==================================
 ## Getting started
 To run the integration tests you need a running Android device or emulator with at least Android 4.2 Jelly Bean.
