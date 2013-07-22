@@ -26,6 +26,8 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeFactory;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.jboss.aerogear.android.pipeline.PipeType;
+import org.jboss.aerogear.android.pipeline.RequestBuilder;
+import org.jboss.aerogear.android.pipeline.ResponseParser;
 
 import com.google.gson.Gson;
 
@@ -87,6 +89,16 @@ public class StubPipeFactory implements PipeFactory {
             @Override
             public Class getKlass() {
                 return null;
+            }
+
+            @Override
+            public RequestBuilder getRequestBuilder() {
+                    return null;
+            }
+
+            @Override
+            public ResponseParser getResponseParser() {
+                    return null;
             }
 
         };

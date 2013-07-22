@@ -20,6 +20,7 @@ package org.jboss.aerogear.android.impl.http;
 import java.net.URL;
 
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.http.HttpException;
 import org.jboss.aerogear.android.http.HttpProvider;
 
 public class HttpStubProvider implements HttpProvider {
@@ -59,6 +60,16 @@ public class HttpStubProvider implements HttpProvider {
 
     @Override
     public void setDefaultHeader(String headerName, String headerValue) {
+    }
+
+    @Override
+    public HeaderAndBody post(byte[] arg0) throws HttpException {
+    return response;
+    }
+
+    @Override
+    public HeaderAndBody put(String arg0, byte[] arg1) throws HttpException {
+    return response;
     }
 
 }
