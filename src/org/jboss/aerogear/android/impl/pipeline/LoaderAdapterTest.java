@@ -105,7 +105,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         final HttpStubProvider provider = new HttpStubProvider(url, response);
         PipeConfig config = new PipeConfig(url,
                 LoaderAdapterTest.ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
 
         Pipeline pipeline = new Pipeline(url);
 
@@ -141,7 +141,7 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         
         PipeConfig config = new PipeConfig(url,
                 LoaderAdapterTest.ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
 
         Pipeline pipeline = new Pipeline(url);
 

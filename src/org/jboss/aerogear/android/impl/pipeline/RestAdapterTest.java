@@ -152,7 +152,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final HttpStubProvider provider = new HttpStubProvider(url, new HeaderAndBody(SERIALIZED_POINTS.getBytes(utf_16), new HashMap<String, Object>()));
 
         PipeConfig config = new PipeConfig(url, ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
         config.setEncoding(utf_16);
         RestAdapter<ListClassId> restPipe = new RestAdapter<ListClassId>(ListClassId.class, url, config);
         Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");
@@ -175,7 +175,7 @@ public class RestAdapterTest extends AndroidTestCase {
         Pipeline pipeline = new Pipeline(url);
         PipeConfig config = new PipeConfig(url, ListClassId.class);
         config.setEncoding(utf_16);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
 
         RestAdapter<ListClassId> restPipe = (RestAdapter<ListClassId>) pipeline
                 .pipe(ListClassId.class, config);
@@ -190,7 +190,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final HttpStubProvider provider = new HttpStubProvider(url, response);
 
         PipeConfig config = new PipeConfig(url, ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
 
         RestAdapter<ListClassId> restPipe = new RestAdapter<ListClassId>(ListClassId.class, url, config);
         Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");
@@ -213,7 +213,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final HttpStubProvider provider = new HttpStubProvider(url, response);
 
         PipeConfig config = new PipeConfig(url, ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
         config.setDataRoot("result.points");
 
         RestAdapter<ListClassId> restPipe = new RestAdapter<ListClassId>(ListClassId.class, url, config);
@@ -238,7 +238,7 @@ public class RestAdapterTest extends AndroidTestCase {
         final HttpStubProvider provider = new HttpStubProvider(url, response);
 
         PipeConfig config = new PipeConfig(url, ListClassId.class);
-        config.setGsonBuilder(builder);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
         config.setDataRoot("");
 
         RestAdapter<Point> restPipe = new RestAdapter<Point>(Point.class, url, config);
@@ -362,7 +362,7 @@ public class RestAdapterTest extends AndroidTestCase {
 
         AuthenticationModule urlModule = mock(AuthenticationModule.class);
         when(urlModule.isLoggedIn()).thenReturn(true);
-        when(urlModule.getAuthorizationFields()).thenReturn(authFields);
+        when(urlModule.getAuthorizationFields((URI)anyObject(),(String)anyObject(),(byte[])anyObject())).thenReturn(authFields);
 
         PipeConfig config = new PipeConfig(url, Data.class);
         config.setAuthModule(urlModule);
@@ -406,7 +406,7 @@ public class RestAdapterTest extends AndroidTestCase {
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Point.class, new RestAdapterTest.PointTypeAdapter());
 
         PipeConfig pipeConfig = new PipeConfig(url, ListClassId.class);
-        pipeConfig.setGsonBuilder(builder);
+        pipeConfig.setRequestBuilder(new GsonRequestBuilder(builder.create()));
         pipeConfig.setPageConfig(pageConfig);
 
         Pipe<ListClassId> dataPipe = pipeline.pipe(ListClassId.class, pipeConfig);
@@ -441,7 +441,7 @@ public class RestAdapterTest extends AndroidTestCase {
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Point.class, new RestAdapterTest.PointTypeAdapter());
 
         PipeConfig pipeConfig = new PipeConfig(url, ListClassId.class);
-        pipeConfig.setGsonBuilder(builder);
+        pipeConfig.setRequestBuilder(new GsonRequestBuilder(builder.create()));
         pipeConfig.setPageConfig(pageConfig);
 
         Pipe<ListClassId> dataPipe = pipeline.pipe(ListClassId.class, pipeConfig);
