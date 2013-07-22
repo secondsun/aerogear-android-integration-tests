@@ -130,6 +130,52 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
 
     }
 
+    public void testSingleObjectSave() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        
+        final HttpStubProvider provider = mock(HttpStubProvider.class);
+        when(provider.getUrl()).thenReturn(url);
+        
+        when(provider.post((byte[])anyObject()))
+            .thenReturn(new HeaderAndBody(
+                            SERIALIZED_POINTS.getBytes(),
+                            new HashMap<String, Object>())
+                       );
+        
+        when(provider.put(any(String.class), (byte[])anyObject()))
+            .thenReturn(new HeaderAndBody(
+                            SERIALIZED_POINTS.getBytes(),
+                            new HashMap<String, Object>())
+                       );
+        
+        PipeConfig config = new PipeConfig(url,
+                LoaderAdapterTest.ListClassId.class);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+
+        runSave(adapter);
+
+        verify(provider).put(any(String.class), (byte[])anyObject());
+
+    }
+    
     public void testSingleObjectDelete() throws Exception {
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
@@ -327,6 +373,33 @@ public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActi
         Assert.assertFalse(hasException.get());
     }
 
+    private void runSave(Pipe<ListClassId> restPipe)
+            throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicBoolean hasException = new AtomicBoolean(false);
+        
+        restPipe.save(new ListClassId(true), 
+                      new Callback<ListClassId>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+                        public void onSuccess(ListClassId data) {
+                            latch.countDown();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            hasException.set(true);
+                            Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
+                                    .log(Level.SEVERE, e.getMessage(), e);
+                            latch.countDown();
+                        }
+                      });
+
+        latch.await(2, TimeUnit.SECONDS);
+        Assert.assertFalse(hasException.get());
+    }
+    
     public void testRunReadWithFilter() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
