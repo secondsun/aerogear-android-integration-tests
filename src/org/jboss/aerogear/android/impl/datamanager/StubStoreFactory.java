@@ -68,6 +68,11 @@ public class StubStoreFactory implements StoreFactory {
                 return new ArrayList();
             }
 
+            @Override
+            public boolean isEmpty() {
+                return true;
+            }
+
         };
     }
 }
