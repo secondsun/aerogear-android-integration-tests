@@ -22,15 +22,16 @@ before_install:
 
   # Checkout maven-android-sdk-deployer
   - git clone git://github.com/mosabua/maven-android-sdk-deployer.git
+
+  # Install locally google-play-services
   - cd $PWD/maven-android-sdk-deployer/extras/google-play-services
   - mvn install -N --quiet
   - cd ../../..
 
-  # Checkout AeroGear Android
-  - git clone git://github.com/aerogear/aerogear-android.git
-  - cd $PWD/aerogear-android
+  # Install locally compatibility-v4
+  - cd $PWD/maven-android-sdk-deployer/extras/compatibility-v4
   - mvn install -N --quiet
-  - cd ..
+  - cd ../../..
 
   # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
