@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import static junit.framework.Assert.assertEquals;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver;
 import org.jboss.aerogear.android.unifiedpush.MessageHandler;
@@ -41,10 +42,48 @@ public class AeroGearGCMMessageReceiverTests  extends ActivityInstrumentationTes
         TestMessageHandler handler = new TestMessageHandler(latch);
         Registrations.registerMainThreadHandler(handler);
         IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
-        ctx.registerReceiver(receiver, filter);
-        ctx.sendBroadcast(new Intent("com.google.android.c2dm.intent.RECEIVE"));
+        Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE");
+        
+        myIntent.putExtra("testKey", "testValue");
+        ctx.registerReceiver(receiver, filter);        
+        ctx.sendBroadcast(myIntent);
         latch.await(1, TimeUnit.SECONDS);
         assertEquals(TestMessageHandler.Result.MESSAGE, handler.resultType);
+        assertEquals("testValue", handler.result.getString("testKey"));
+    }
+
+    public void testConsumeMessageDelete() throws InterruptedException {
+        Context ctx = getActivity().getApplicationContext();
+        AeroGearGCMMessageReceiver receiver = new AeroGearGCMMessageReceiver();
+        CountDownLatch latch = new CountDownLatch(1);
+        TestMessageHandler handler = new TestMessageHandler(latch);
+        Registrations.registerMainThreadHandler(handler);
+        IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
+        Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE").putExtra("message_type", "deleted_messages");
+        
+        ctx.registerReceiver(receiver, filter);
+        ctx.sendBroadcast(myIntent);
+        latch.await(1, TimeUnit.SECONDS);
+        assertEquals(TestMessageHandler.Result.DELETE, handler.resultType);
+        assertEquals(myIntent.getExtras().getString("message_type"), handler.result.getString("message_type"));
+        
+    }
+
+    
+    public void testConsumeMessageError() throws InterruptedException {
+        Context ctx = getActivity().getApplicationContext();
+        AeroGearGCMMessageReceiver receiver = new AeroGearGCMMessageReceiver();
+        CountDownLatch latch = new CountDownLatch(1);
+        TestMessageHandler handler = new TestMessageHandler(latch);
+        Registrations.registerMainThreadHandler(handler);
+        IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
+        Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE").putExtra("message_type", "send_error");
+        
+        ctx.registerReceiver(receiver, filter);
+        ctx.sendBroadcast(myIntent);
+        latch.await(1, TimeUnit.SECONDS);
+        assertEquals(TestMessageHandler.Result.ERROR, handler.resultType);
+        assertEquals(null, handler.result);
         
     }
     
