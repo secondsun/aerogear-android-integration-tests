@@ -42,9 +42,9 @@ public final class VoidCallback implements Callback {
 
 	@Override
 	public void onFailure(Exception e) {
-		if (latch != null) {
+		this.exception = e;
+                if (latch != null) {
 			latch.countDown();
 		}
-		this.exception = e;
 	}
 }
