@@ -24,13 +24,43 @@
     <version>1.2.0-SNAPSHOT</version>
     <url>http://aerogear.org</url>
     <packaging>apk</packaging>
-    <name>AeroGear-Android integration tests</name>
+    <name>AeroGear Android integration tests</name>
 
     <parent>
-        <groupId>org.jboss</groupId>
-        <artifactId>jboss-parent</artifactId>
-        <version>6-beta-2</version>
+        <groupId>org.jboss.aerogear</groupId>
+        <artifactId>aerogear-parent</artifactId>
+        <version>0.1.0</version>
     </parent>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <distribution>repo</distribution>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>passos</id>
+            <name>Daniel Passos</name>
+            <url>http://passos.me/</url>
+            <email>dpassos@redhat.com</email>
+        </developer>
+
+        <developer>
+            <id>secondsun</id>
+            <name>Summers Pittman</name>
+            <url>http://blog.sagaoftherealms.net/</url>
+            <email>supittma@redhat.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:aerogear/aerogear-android-integration-tests.git</connection>
+        <developerConnection>scm:git:git@github.com:aerogear/aerogear-android-integration-tests.git</developerConnection>
+        <url>git@github.com:aerogear/aerogear-android-integration-tests.git</url>
+    </scm>  
 
     <properties>
         <version.org.jboss.aerogear>1.2.1-SNAPSHOT</version.org.jboss.aerogear>
