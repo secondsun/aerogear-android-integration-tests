@@ -17,19 +17,29 @@
 
 package org.jboss.aerogear.android.authentication.impl.loader;
 
-import android.test.AndroidTestCase;
+import android.app.Fragment;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.util.StubActivity;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class LoadersTest extends AndroidTestCase {
+public class LoadersTest extends android.test.ActivityInstrumentationTestCase2<StubActivity> {
 
+    public LoadersTest() {
+        super(StubActivity.class);
+    }
+
+    
+    
     final HeaderAndBody response = new HeaderAndBody(new byte[]{1, 2, 3, 4}, new HashMap<String, Object>());
     AuthenticationModule module;
     VoidCallback callback;
@@ -47,7 +57,7 @@ public class LoadersTest extends AndroidTestCase {
     public void testEnrollLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        EnrollLoader loader = new EnrollLoader(mContext, callback, module, params);
+        EnrollLoader loader = new EnrollLoader(getActivity(), callback, module, params);
         loader.loadInBackground();
         verify(module).enroll(eq(params), any(Callback.class));
     }
@@ -55,7 +65,7 @@ public class LoadersTest extends AndroidTestCase {
     public void testLogoutLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        LogoutLoader loader = new LogoutLoader(mContext, callback, module);
+        LogoutLoader loader = new LogoutLoader(getActivity(), callback, module);
         loader.loadInBackground();
         verify(module).logout(any(Callback.class));
     }
@@ -63,11 +73,11 @@ public class LoadersTest extends AndroidTestCase {
     public void testLoginLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        LoginLoader loader = new LoginLoader(mContext, callback, module, "username", "password");
+        LoginLoader loader = new LoginLoader(getActivity(), callback, module, "username", "password");
         loader.loadInBackground();
         verify(module).login(eq("username"), eq("password"), any(Callback.class));
     }
-
+    
     private final class ResponseAnswer<T> implements Answer<Void> {
 
         T response;
