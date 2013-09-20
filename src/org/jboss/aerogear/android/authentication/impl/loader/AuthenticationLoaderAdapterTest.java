@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 import java.util.HashMap;
 import java.util.Map;
+import static junit.framework.Assert.assertEquals;
+import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
@@ -63,8 +65,8 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
         assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
-        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
-        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
+        assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
+        assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
 
     }
 
@@ -99,8 +101,9 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
         assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
-        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
-        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
+        assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
+        assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
+
 
     }
 

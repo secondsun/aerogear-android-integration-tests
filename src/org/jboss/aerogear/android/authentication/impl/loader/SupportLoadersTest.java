@@ -43,6 +43,7 @@ public class SupportLoadersTest extends AndroidTestCase {
         callback = new VoidCallback();
         doAnswer(new ResponseAnswer<HeaderAndBody>(response)).when(module).enroll(any(Map.class), any(Callback.class));
         doAnswer(new ResponseAnswer<HeaderAndBody>(response)).when(module).login(anyString(), anyString(), any(Callback.class));
+        doAnswer(new ResponseAnswer<HeaderAndBody>(response)).when(module).login(anyMap(), any(Callback.class));
         doAnswer(new ResponseAnswer<Void>(null)).when(module).logout(any(Callback.class));
 
     }
@@ -68,7 +69,7 @@ public class SupportLoadersTest extends AndroidTestCase {
         params.put("test", "test");
         SupportLoginLoader loader = new SupportLoginLoader(mContext, callback, module, "username", "password");
         loader.loadInBackground();
-        verify(module).login(eq("username"), eq("password"), any(Callback.class));
+        verify(module).login(anyMap(), any(Callback.class));
     }
 
     private final class ResponseAnswer<T> implements Answer<Void> {
