@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
+import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
@@ -42,7 +43,8 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     private ArgumentCaptor<Integer> idMatcher;
     private ArgumentCaptor<Bundle> bundleMatcher;
     private VoidCallback callback;
-
+    private AuthenticationModule module = mock(AuthenticationModule.class);
+    
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -59,7 +61,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testActivityLogin() {
-        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, module, "name");
         authModule.login(USERNAME_VALUE, PASSWORD_VALUE, callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
@@ -84,7 +86,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     }
 
     public void testActivityLogout() {
-        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, null, "name");
+        AuthenticationModuleAdapter authModule = new AuthenticationModuleAdapter(activity, module, "name");
         authModule.logout(callback);
         verify(manager).initLoader(idMatcher.capture(), bundleMatcher.capture(), (LoaderManager.LoaderCallbacks) any());
         Bundle bundle = bundleMatcher.getValue();
