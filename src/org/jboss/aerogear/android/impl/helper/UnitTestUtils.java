@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportAuthenticationModuleAdapter;
 
 import org.jboss.aerogear.android.impl.reflection.FieldNotFoundException;
+import org.mockito.Mockito;
 
 public class UnitTestUtils {
 
@@ -72,6 +73,31 @@ public class UnitTestUtils {
         return (T) field.get(target);
     }
 
+    /**
+     * 
+     * This method extracts a named field, replaces it with a spy, and returns 
+     * the spy.
+     * 
+     * @param target The object requiring a hot spy injection
+     * @param fieldName the field to spy on
+     * @param type The type of the spy
+     * @return a spy which has replaced the field from fieldName
+     * @throws NoSuchFieldException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException 
+     */
+    public static <T> T replaceWithSpy(Object target, String fieldName,
+            Class<T> type) throws NoSuchFieldException,
+            IllegalArgumentException, IllegalAccessException {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        T object =  (T) field.get(target);
+        object = Mockito.spy(object);
+        setPrivateField(target, fieldName, object);
+        return object;
+    }
+
+    
     public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
         Collections.addAll(fields, type.getDeclaredFields());
 
