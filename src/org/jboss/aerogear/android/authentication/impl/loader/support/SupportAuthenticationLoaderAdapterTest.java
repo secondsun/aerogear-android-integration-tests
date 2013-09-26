@@ -79,18 +79,21 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
     public void testCreateLoginLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
     	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
+        Bundle loginParams = new Bundle();
+        loginParams.putString(USERNAME, USERNAME_VALUE);
+        loginParams.putString(PASSWORD, PASSWORD_VALUE);
         
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGIN;
         bundle.putSerializable(METHOD, (Serializable) method);
-        bundle.putSerializable(USERNAME, USERNAME_VALUE);
-        bundle.putSerializable(PASSWORD, PASSWORD_VALUE);
+        bundle.putBundle(PARAMS, loginParams);
+        
         
         SupportLoginLoader loader = (SupportLoginLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
-        String username = UnitTestUtils.getPrivateField(loader, "username").toString();
-        String password = UnitTestUtils.getPrivateField(loader, "password").toString();
-        assertEquals(USERNAME_VALUE, username);
-        assertEquals(PASSWORD_VALUE, password);
+        HashMap loginData = (HashMap) UnitTestUtils.getPrivateField(loader, "loginData");
+        
+        assertEquals(USERNAME_VALUE, loginData.get(USERNAME));
+        assertEquals(PASSWORD_VALUE, loginData.get(PASSWORD));
     }
     
     public void testCreateLogoutLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {

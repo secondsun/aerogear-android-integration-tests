@@ -23,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
@@ -53,6 +54,7 @@ public class LoadersTest extends android.test.ActivityInstrumentationTestCase2<M
         doAnswer(new ResponseAnswer<HeaderAndBody>(response)).when(module).login(anyString(), anyString(), any(Callback.class));
         doAnswer(new ResponseAnswer<HeaderAndBody>(response)).when(module).login(anyMapOf(String.class, String.class), any(Callback.class));
         doAnswer(new ResponseAnswer<Void>(null)).when(module).logout(any(Callback.class));
+        when(module.isLoggedIn()).thenReturn(Boolean.FALSE);
 
     }
 
@@ -83,25 +85,31 @@ public class LoadersTest extends android.test.ActivityInstrumentationTestCase2<M
         
         AuthenticationModule mockModule = mock(AuthenticationModule.class);
         final AtomicReference<HashMap> mapRef = new AtomicReference<HashMap>();
-        final CountDownLatch latch = new CountDownLatch(2);
+        final AtomicReference<CountDownLatch> latchRef = new AtomicReference<CountDownLatch>();
+        CountDownLatch latch = new CountDownLatch(1);
+        latchRef.set(latch);
         Mockito.doAnswer(new Answer() {
 
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 mapRef.set(new HashMap());
-                latch.countDown();
+                latchRef.get().countDown();
                 return null;
             }
-        }).when(mockModule).login(anyString(), anyString(), (Callback<HeaderAndBody>) any());
+        }).when(mockModule).login((Map)any(), (Callback<HeaderAndBody>) any());
+        Mockito.when(mockModule.isLoggedIn()).thenReturn(false);
         
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(getActivity(), mockModule, "ignore");
         adapter.login("username", "password", new VoidCallback(latch));
-        
+        assertTrue(latch.await(5, TimeUnit.SECONDS));
         
         Map firstMap = mapRef.get();
         
+        latch = new CountDownLatch(1);
+        latchRef.set(latch);
+        adapter.logout(new VoidCallback());
         adapter.login("username", "password", new VoidCallback(latch));
-        assertTrue(latch.await(5, TimeUnit.SECONDS));
+        latch.await(25, TimeUnit.SECONDS);
         Map secondMap = mapRef.get();
         
         assertNotNull(firstMap);
