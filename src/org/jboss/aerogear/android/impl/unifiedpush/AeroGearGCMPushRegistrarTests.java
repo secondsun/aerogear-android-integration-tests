@@ -41,7 +41,6 @@ import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-
 public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private static final String TEST_SENDER_ID = "272275396485";
@@ -51,7 +50,7 @@ public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTest
     }
 
     
-    public void testRegisterDoesNotHangOn401() throws Exception {
+    public void ignoreRegisterDoesNotHangOn401() throws Exception {
     	
         final String VARIANT_ID       = "123";
         final String SECRET           = "123";
@@ -77,7 +76,7 @@ public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTest
     }
         
     
-    public void testRegisterReal() throws Exception {
+    public void ignoreRegisterReal() throws Exception {
     	
         final String VARIANT_ID       = "941a7dab-3bf2-41a8-9c6b-ebb5b80c3277";
         final String SECRET           = "0e75aaf5-3f7c-47bd-bca9-fbafcc0e842a";
