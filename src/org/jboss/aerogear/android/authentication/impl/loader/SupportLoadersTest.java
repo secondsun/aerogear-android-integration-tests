@@ -17,11 +17,22 @@
 
 package org.jboss.aerogear.android.authentication.impl.loader;
 
-import android.test.AndroidTestCase;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.test.ActivityInstrumentationTestCase2;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.jboss.aerogear.MainActivity;
+import org.jboss.aerogear.MainFragmentActivity;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
+import org.jboss.aerogear.android.authentication.impl.HttpBasicAuthenticationModule;
+import org.jboss.aerogear.android.authentication.impl.loader.support.SupportAuthenticationModuleAdapter;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportEnrollLoader;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLoginLoader;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLogoutLoader;
@@ -31,7 +42,11 @@ import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class SupportLoadersTest extends AndroidTestCase {
+public class SupportLoadersTest  extends ActivityInstrumentationTestCase2<MainFragmentActivity> {
+
+    public SupportLoadersTest() {
+        super(MainFragmentActivity.class);
+    }
 
     final HeaderAndBody response = new HeaderAndBody(new byte[]{1, 2, 3, 4}, new HashMap<String, Object>());
     AuthenticationModule module;
@@ -51,7 +66,7 @@ public class SupportLoadersTest extends AndroidTestCase {
     public void testEnrollLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        SupportEnrollLoader loader = new SupportEnrollLoader(mContext, callback, module, params);
+        SupportEnrollLoader loader = new SupportEnrollLoader(getActivity(), callback, module, params);
         loader.loadInBackground();
         verify(module).enroll(eq(params), any(Callback.class));
     }
@@ -59,7 +74,7 @@ public class SupportLoadersTest extends AndroidTestCase {
     public void testLogoutLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        SupportLogoutLoader loader = new SupportLogoutLoader(mContext, callback, module);
+        SupportLogoutLoader loader = new SupportLogoutLoader(getActivity(), callback, module);
         loader.loadInBackground();
         verify(module).logout(any(Callback.class));
     }
@@ -67,9 +82,50 @@ public class SupportLoadersTest extends AndroidTestCase {
     public void testLoginLoader() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("test", "test");
-        SupportLoginLoader loader = new SupportLoginLoader(mContext, callback, module, "username", "password");
+        SupportLoginLoader loader = new SupportLoginLoader(getActivity(), callback, module, "username", "password");
         loader.loadInBackground();
         verify(module).login(anyMap(), any(Callback.class));
+    }
+    
+    public void testLoginLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
+        
+        AuthenticationModule module = new HttpBasicAuthenticationModule(new URL("http://test.com"));
+        CountDownLatch latch = new CountDownLatch(1);
+        final AtomicInteger loginCount = new AtomicInteger(0);
+        final AtomicInteger logoutCount = new AtomicInteger(0);
+        SupportAuthenticationModuleAdapter adapter = new SupportAuthenticationModuleAdapter(getActivity(), module, "ignore");
+        
+        adapter = spy(adapter);
+        doAnswer(new Answer() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Bundle bundle = (Bundle) invocation.getArguments()[1];
+                SupportAuthenticationModuleAdapter.Methods method = (SupportAuthenticationModuleAdapter.Methods) bundle.get(LoaderAuthenticationModule.METHOD);
+                switch (method) {
+                case LOGIN:
+                    loginCount.incrementAndGet();
+                    break;
+                case LOGOUT:
+                    logoutCount.incrementAndGet();
+                    break;
+                }
+                ((Callback)bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
+                return mock(Loader.class);
+            }
+        }).when(adapter).onCreateLoader(anyInt(), any(Bundle.class));
+        
+        adapter.login("evilname", "password", new VoidCallback(latch));
+        assertTrue(latch.await(1, TimeUnit.SECONDS));
+        
+        latch = new CountDownLatch(1);
+        adapter.logout(new VoidCallback());
+        adapter.login("evilname", "password", new VoidCallback(latch));
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        
+        assertEquals(2, loginCount.get());
+        assertEquals(1, logoutCount.get());
+        
     }
 
     private final class ResponseAnswer<T> implements Answer<Void> {

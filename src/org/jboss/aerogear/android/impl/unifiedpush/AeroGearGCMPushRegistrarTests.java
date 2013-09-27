@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+
 public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private static final String TEST_SENDER_ID = "272275396485";
@@ -48,6 +49,7 @@ public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTest
     public AeroGearGCMPushRegistrarTests() {
         super(MainActivity.class);
     }
+
     
     public void testRegisterDoesNotHangOn401() throws Exception {
     	
