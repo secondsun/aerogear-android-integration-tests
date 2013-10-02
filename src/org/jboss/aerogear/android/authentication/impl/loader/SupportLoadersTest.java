@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.MainFragmentActivity;
@@ -87,9 +88,10 @@ public class SupportLoadersTest  extends ActivityInstrumentationTestCase2<MainFr
         verify(module).login(anyMap(), any(Callback.class));
     }
     
-    public void testLoginLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
+    public void testLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
         
-        AuthenticationModule module = new HttpBasicAuthenticationModule(new URL("http://test.com"));
+        AuthenticationModule module = spy(new HttpBasicAuthenticationModule(new URL("http://test.com")));
+        final AtomicBoolean loggedIn = new AtomicBoolean(false);
         CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger loginCount = new AtomicInteger(0);
         final AtomicInteger logoutCount = new AtomicInteger(0);
@@ -105,15 +107,25 @@ public class SupportLoadersTest  extends ActivityInstrumentationTestCase2<MainFr
                 switch (method) {
                 case LOGIN:
                     loginCount.incrementAndGet();
+                    loggedIn.set(true);
                     break;
                 case LOGOUT:
                     logoutCount.incrementAndGet();
+                    loggedIn.set(false);
                     break;
                 }
                 ((Callback)bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
                 return mock(Loader.class);
             }
         }).when(adapter).onCreateLoader(anyInt(), any(Bundle.class));
+        
+        doAnswer(new Answer() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return loggedIn.get();
+            }
+        }).when(module).isLoggedIn();
         
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(1, TimeUnit.SECONDS));
@@ -122,9 +134,10 @@ public class SupportLoadersTest  extends ActivityInstrumentationTestCase2<MainFr
         adapter.logout(new VoidCallback());
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(2, TimeUnit.SECONDS));
+        adapter.logout(new VoidCallback());
         
         assertEquals(2, loginCount.get());
-        assertEquals(1, logoutCount.get());
+        assertEquals(2, logoutCount.get());
         
     }
 
