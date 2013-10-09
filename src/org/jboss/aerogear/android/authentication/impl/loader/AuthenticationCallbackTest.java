@@ -19,6 +19,7 @@ package org.jboss.aerogear.android.authentication.impl.loader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.test.AndroidTestCase;
 import java.util.HashMap;
 import org.jboss.aerogear.android.authentication.impl.loader.AuthenticationModuleAdapter.CallbackHandler;
@@ -35,6 +36,7 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
         Fragment fragment = Mockito.mock(Fragment.class);
 
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
+        UnitTestUtils.setPrivateField(adapter, "manager", Mockito.mock(LoaderManager.class));
         VoidFragmentCallback fragmentCallback = new VoidFragmentCallback();
         LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(fragmentCallback);
@@ -51,6 +53,7 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
         Fragment fragment = Mockito.mock(Fragment.class);
 
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(fragment, getContext(), null, "ignore");
+        UnitTestUtils.setPrivateField(adapter, "manager", Mockito.mock(LoaderManager.class));
         VoidFragmentCallback fragmentCallback = new VoidFragmentCallback();
         LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(fragmentCallback);
@@ -69,6 +72,7 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
         Activity activity = Mockito.mock(Activity.class);
 
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(activity, null, "ignore");
+        UnitTestUtils.setPrivateField(adapter, "manager", Mockito.mock(LoaderManager.class));
         VoidActivityCallback activityCallback = new VoidActivityCallback();
         LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(activityCallback);
@@ -85,6 +89,7 @@ public class AuthenticationCallbackTest extends AndroidTestCase {
         Activity activity = Mockito.mock(Activity.class);
 
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(activity, null, "ignore");
+        UnitTestUtils.setPrivateField(adapter, "manager", Mockito.mock(LoaderManager.class));
         VoidActivityCallback activityCallback = new VoidActivityCallback();
         LoginLoader loader = Mockito.mock(LoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(activityCallback);

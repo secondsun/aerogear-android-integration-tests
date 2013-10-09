@@ -21,7 +21,7 @@
 
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-android-integration-tests</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1</version>
     <url>http://aerogear.org</url>
     <packaging>apk</packaging>
     <name>AeroGear Android integration tests</name>
@@ -63,7 +63,7 @@
     </scm>  
 
     <properties>
-        <version.org.jboss.aerogear>1.2.1-SNAPSHOT</version.org.jboss.aerogear>
+        <version.org.jboss.aerogear>1.2.1</version.org.jboss.aerogear>
         <version.com.google.android>4.0.1.2</version.com.google.android>
         <version.com.google.android.annotations>4.1.1.4</version.com.google.android.annotations>
         <version.com.google.android.supportv4>18</version.com.google.android.supportv4>
@@ -78,6 +78,7 @@
         <version.com.jayway.maven.plugins.android.generation2>3.6.0</version.com.jayway.maven.plugins.android.generation2>
         <version.emma>2.1.5320</version.emma>
         <android.target.sdk.platform>17</android.target.sdk.platform>
+        <android.debug>false</android.debug>
     </properties>
 
     <dependencies>
@@ -164,6 +165,9 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <version>${version.com.jayway.maven.plugins.android.generation2}</version>
                 <configuration>
+                    <test>
+                        <debug>${android.debug}</debug>
+                    </test>
                     <proguard>
                         <skip>true</skip>
                     </proguard>

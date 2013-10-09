@@ -20,18 +20,14 @@ package org.jboss.aerogear.android.authentication.impl.loader.support;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import org.jboss.aerogear.android.authentication.impl.loader.support.SupportAuthenticationModuleAdapter;
-import org.jboss.aerogear.android.authentication.impl.loader.support.SupportEnrollLoader;
-import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLoginLoader;
-import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLogoutLoader;
-import org.jboss.aerogear.android.http.HeaderAndBody;
+import static junit.framework.Assert.assertEquals;
+import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
@@ -83,18 +79,21 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
     public void testCreateLoginLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
     	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
+        Bundle loginParams = new Bundle();
+        loginParams.putString(USERNAME, USERNAME_VALUE);
+        loginParams.putString(PASSWORD, PASSWORD_VALUE);
         
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGIN;
         bundle.putSerializable(METHOD, (Serializable) method);
-        bundle.putSerializable(USERNAME, USERNAME_VALUE);
-        bundle.putSerializable(PASSWORD, PASSWORD_VALUE);
+        bundle.putBundle(PARAMS, loginParams);
+        
         
         SupportLoginLoader loader = (SupportLoginLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
-        String username = UnitTestUtils.getPrivateField(loader, "username").toString();
-        String password = UnitTestUtils.getPrivateField(loader, "password").toString();
-        assertEquals(USERNAME_VALUE, username);
-        assertEquals(PASSWORD_VALUE, password);
+        HashMap loginData = (HashMap) UnitTestUtils.getPrivateField(loader, "loginData");
+        
+        assertEquals(USERNAME_VALUE, loginData.get(USERNAME));
+        assertEquals(PASSWORD_VALUE, loginData.get(PASSWORD));
     }
     
     public void testCreateLogoutLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
@@ -113,8 +112,8 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
         assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
-        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
-        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
+        assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
+        assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
 
     }
 
@@ -127,8 +126,6 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertNotNull(bundle);
         assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
         assertEquals(userData, bundle.get(PARAMS));
-
-
     }
 
     public void testActivityLogout() {
@@ -149,8 +146,9 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         Bundle bundle = bundleMatcher.getValue();
         assertNotNull(bundle);
         assertEquals("LOGIN", ((Enum) bundle.get(METHOD)).name());
-        assertEquals(USERNAME_VALUE, bundle.get(USERNAME));
-        assertEquals(PASSWORD_VALUE, bundle.get(PASSWORD));
+        assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
+        assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
+
 
     }
 

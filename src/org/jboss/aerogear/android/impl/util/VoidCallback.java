@@ -47,4 +47,11 @@ public final class VoidCallback implements Callback {
 			latch.countDown();
 		}
 	}
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+        
+        
 }

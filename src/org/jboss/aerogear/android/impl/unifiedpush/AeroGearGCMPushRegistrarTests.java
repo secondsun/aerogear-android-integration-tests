@@ -26,10 +26,13 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.http.HttpException;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpRestProviderForPush;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
@@ -45,7 +48,58 @@ public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTest
     public AeroGearGCMPushRegistrarTests() {
         super(MainActivity.class);
     }
+
     
+    public void ignoreRegisterDoesNotHangOn401() throws Exception {
+    	
+        final String VARIANT_ID       = "123";
+        final String SECRET           = "123";
+        final String GCM_SENDER_ID    = "AIzaSyAJWVz2kY1JeqdItGyEG4h3nW6uyXneQPY";
+        final String UNIFIED_PUSH_URL = "http://10.0.2.2:8080/ag-push";
+        
+        PushConfig config = new PushConfig(GCM_SENDER_ID);
+        config.setPushServerURI(new URI(UNIFIED_PUSH_URL));
+        config.setSecret(SECRET);
+        config.setVariantID(VARIANT_ID);
+        AeroGearGCMPushRegistrar registrar = new AeroGearGCMPushRegistrar(config);
+        CountDownLatch latch = new CountDownLatch(1);
+        
+        VoidCallback callback = new VoidCallback(latch);
+        
+        registrar = Mockito.spy(registrar);
+        Mockito.doReturn("tempId").when(registrar).getRegistrationId((Context) Mockito.any());
+        
+        registrar.register(super.getActivity(), callback);
+        assertTrue(latch.await(10, TimeUnit.SECONDS));
+        assertNotNull(callback.exception);
+        assertEquals("The server returned the error code 401.", callback.exception.getMessage());
+    }
+        
+    
+    public void ignoreRegisterReal() throws Exception {
+    	
+        final String VARIANT_ID       = "941a7dab-3bf2-41a8-9c6b-ebb5b80c3277";
+        final String SECRET           = "0e75aaf5-3f7c-47bd-bca9-fbafcc0e842a";
+        final String GCM_SENDER_ID    = "AIzaSyAJWVz2kY1JeqdItGyEG4h3nW6uyXneQPY";
+        final String UNIFIED_PUSH_URL = "http://10.0.2.2:8080/ag-push";
+        
+        PushConfig config = new PushConfig(GCM_SENDER_ID);
+        config.setPushServerURI(new URI(UNIFIED_PUSH_URL));
+        config.setSecret(SECRET);
+        config.setVariantID(VARIANT_ID);
+        AeroGearGCMPushRegistrar registrar = new AeroGearGCMPushRegistrar(config);
+        CountDownLatch latch = new CountDownLatch(1);
+        
+        VoidCallback callback = new VoidCallback(latch);
+        
+        registrar = Mockito.spy(registrar);
+        Mockito.doReturn("tempId").when(registrar).getRegistrationId((Context) Mockito.any());
+        
+        registrar.register(super.getActivity(), callback);
+        assertTrue(latch.await(10, TimeUnit.SECONDS));
+        assertNull(callback.exception);
+        
+    }
     
     
     public void testRegister() throws Exception {
@@ -151,6 +205,28 @@ public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTest
                 return mock;
         }
     }
+    
+    private class BrokenStubHttpProvider implements Provider<HttpRestProviderForPush> {
+
+        protected final HttpRestProviderForPush mock = Mockito.mock(HttpRestProviderForPush.class);
+        
+        public BrokenStubHttpProvider() {
+            byte[] bytes = {1};
+            Mockito.doThrow(new HttpException(bytes, 401))
+                   .when(mock)
+                   .post((String)Mockito.any());
+            
+            Mockito.doThrow(new HttpException(bytes, 401))
+            .when(mock)
+            .delete((String)Mockito.any());
+        }
+        
+        @Override
+        public HttpRestProviderForPush get(Object... in) {
+                return mock;
+        }
+    }
+    
 
     private class StubGCMProvider implements Provider<GoogleCloudMessaging> {
 
