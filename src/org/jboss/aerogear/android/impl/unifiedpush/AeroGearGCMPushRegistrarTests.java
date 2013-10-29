@@ -17,7 +17,6 @@
 package org.jboss.aerogear.android.impl.unifiedpush;
 
 import android.content.Context;
-import android.test.ActivityInstrumentationTestCase2;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -35,13 +34,14 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpException;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.http.HttpRestProviderForPush;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.jboss.aerogear.android.unifiedpush.PushConfig;
 import org.json.JSONObject;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class AeroGearGCMPushRegistrarTests   extends ActivityInstrumentationTestCase2<MainActivity> {
+public class AeroGearGCMPushRegistrarTests   extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     private static final String TEST_SENDER_ID = "272275396485";
     

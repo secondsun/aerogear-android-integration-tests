@@ -67,7 +67,6 @@ import org.mockito.Mockito;
 import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.os.Build;
-import android.test.ActivityInstrumentationTestCase2;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
@@ -78,10 +77,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class LoaderAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public LoaderAdapterTest() {
         super(MainActivity.class);

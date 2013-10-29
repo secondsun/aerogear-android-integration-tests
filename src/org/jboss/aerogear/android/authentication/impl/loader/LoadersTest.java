@@ -19,7 +19,6 @@ package org.jboss.aerogear.android.authentication.impl.loader;
 
 import android.content.Loader;
 import android.os.Bundle;
-import android.test.ActivityInstrumentationTestCase2;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -38,12 +37,13 @@ import static org.jboss.aerogear.android.authentication.impl.loader.Authenticati
 import static org.jboss.aerogear.android.authentication.impl.loader.AuthenticationModuleAdapter.Methods.LOGOUT;
 import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.METHOD;
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class LoadersTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public LoadersTest() {
         super(MainActivity.class);

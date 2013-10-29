@@ -20,16 +20,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.test.ActivityInstrumentationTestCase2;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static junit.framework.Assert.assertEquals;
 import org.jboss.aerogear.MainActivity;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver;
 import org.jboss.aerogear.android.unifiedpush.MessageHandler;
 import org.jboss.aerogear.android.unifiedpush.Registrations;
 
-public class AeroGearGCMMessageReceiverTests  extends ActivityInstrumentationTestCase2<MainActivity> {
+public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public AeroGearGCMMessageReceiverTests() {
         super(MainActivity.class);

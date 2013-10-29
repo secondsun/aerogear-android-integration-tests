@@ -22,9 +22,9 @@ import org.jboss.aerogear.android.ReadFilter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.test.ActivityInstrumentationTestCase2;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class ReadFilterTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class ReadFilterTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public ReadFilterTest() {
         super(MainActivity.class);

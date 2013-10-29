@@ -33,11 +33,11 @@ import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.jboss.aerogear.android.pipeline.Pipe;
 
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class HttpBasicIntegrationTest  extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
+public class HttpBasicIntegrationTest  extends PatchedActivityInstrumentationTestCase implements AuthenticationModuleTest {
     
     private static final URL CONTROLLER_URL;
     private static final PipeConfig AUTOBOT_CONFIG;

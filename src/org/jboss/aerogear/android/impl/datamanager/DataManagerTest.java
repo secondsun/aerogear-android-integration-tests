@@ -30,9 +30,9 @@ import org.jboss.aerogear.android.datamanager.StoreFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 
-import android.test.ActivityInstrumentationTestCase2;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class DataManagerTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class DataManagerTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public DataManagerTest() {
         super(MainActivity.class);
