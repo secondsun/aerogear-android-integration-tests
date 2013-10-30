@@ -64,9 +64,9 @@
 
     <properties>
         <version.org.jboss.aerogear>1.3.0-SNAPSHOT</version.org.jboss.aerogear>
-        <version.com.google.android>4.2.2_r2</version.com.google.android>
+        <version.com.google.android>4.3_r2</version.com.google.android>
         <version.com.google.android.annotations>4.1.1.4</version.com.google.android.annotations>
-        <version.com.google.android.supportv4>18</version.com.google.android.supportv4>
+        <version.com.google.android.supportv4>19</version.com.google.android.supportv4>
         <version.com.google.android.androidtest>4.0.1.2</version.com.google.android.androidtest>
         <version.org.mockito>1.9.5</version.org.mockito>
         <version.com.google.dexmaker>1.0</version.com.google.dexmaker>
@@ -75,7 +75,7 @@
         <version.com.google.code.gson>2.2.2</version.com.google.code.gson>
         <version.com.google.guava>13.0.1</version.com.google.guava>
         <version.com.googlecode.maven.java.formatter>0.3.1</version.com.googlecode.maven.java.formatter>
-        <version.com.jayway.maven.plugins.android.generation2>3.6.0</version.com.jayway.maven.plugins.android.generation2>
+        <version.com.jayway.maven.plugins.android.generation2>3.7.0</version.com.jayway.maven.plugins.android.generation2>
         <version.emma>2.1.5320</version.emma>
         <android.target.sdk.platform>17</android.target.sdk.platform>
         <android.debug>false</android.debug>
@@ -149,7 +149,6 @@
     </dependencies>
 
     <build>
-
         <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
@@ -175,6 +174,12 @@
                         <path>${env.ANDROID_HOME}</path>
                         <platform>${android.target.sdk.platform}</platform>
                     </sdk>
+                     <dex>
+                        <jvmArguments>
+                          <jvmArgument>-Xms256m</jvmArgument>
+                          <jvmArgument>-Xmx4096m</jvmArgument>
+                        </jvmArguments> 
+                     </dex>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>
