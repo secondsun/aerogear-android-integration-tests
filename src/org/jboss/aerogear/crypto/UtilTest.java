@@ -28,7 +28,7 @@ public class UtilTest extends AndroidTestCase {
 
     public void testCheckLength() {
         try {
-            byte[] data = new byte[32];
+            byte[] data = new byte[64];
             checkLength(data, MINIMUM_SECRET_KEY_SIZE);
         } catch (Exception e) {
             fail("Should not raise any exception");

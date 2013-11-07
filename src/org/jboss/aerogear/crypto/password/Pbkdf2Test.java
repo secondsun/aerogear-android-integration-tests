@@ -18,6 +18,7 @@ package org.jboss.aerogear.crypto.password;
 
 import android.test.AndroidTestCase;
 import static junit.framework.Assert.fail;
+import org.jboss.aerogear.AeroGearCrypto;
 import org.jboss.aerogear.crypto.Random;
 
 import static org.jboss.aerogear.fixture.TestVectors.INVALID_PASSWORD;
@@ -26,34 +27,34 @@ import static org.jboss.aerogear.fixture.TestVectors.PASSWORD;
 public class Pbkdf2Test extends AndroidTestCase {
 
     public void testPasswordValidationWithRandomSaltProvided() throws Exception {
-        Pbkdf2 pbkdf2 = new Pbkdf2();
+        Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
         byte[] salt = new Random().randomBytes();
         byte[] rawPassword = pbkdf2.encrypt(PASSWORD, salt);
         assertTrue("Password should be valid", pbkdf2.validate(PASSWORD, rawPassword, salt));
     }
 
     public void testPasswordValidationWithSaltGenerated() throws Exception {
-        Pbkdf2 pbkdf2 = new Pbkdf2();
+        Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
         byte[] rawPassword = pbkdf2.encrypt(PASSWORD);
-        assertTrue("Password should be valid", pbkdf2.validate(PASSWORD, rawPassword, pbkdf2.getSalt()));
+        assertTrue("Password should be valid", pbkdf2.validate(PASSWORD, rawPassword, ((DefaultPbkdf2) pbkdf2).getSalt()));
     }
 
     public void testInvalidPasswordValidationWithRandomSaltProvided() throws Exception {
-        Pbkdf2 pbkdf2 = new Pbkdf2();
+        Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
         byte[] salt = new Random().randomBytes();
         byte[] rawPassword = pbkdf2.encrypt(PASSWORD, salt);
         assertFalse("Password should be valid", pbkdf2.validate(INVALID_PASSWORD, rawPassword, salt));
     }
 
     public void testInvalidPasswordValidationWithSaltGenerated() throws Exception {
-        Pbkdf2 pbkdf2 = new Pbkdf2();
+        Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
         byte[] rawPassword = pbkdf2.encrypt(PASSWORD);
-        assertFalse("Password should be valid", pbkdf2.validate(INVALID_PASSWORD, rawPassword, pbkdf2.getSalt()));
+        assertFalse("Password should be valid", pbkdf2.validate(INVALID_PASSWORD, rawPassword, ((DefaultPbkdf2) pbkdf2).getSalt()));
     }
 
     public void testThrowExceptionWithPoorSaltProvided() throws Exception {
         try {
-            Pbkdf2 pbkdf2 = new Pbkdf2();
+            Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
             byte[] salt = "42".getBytes();
             pbkdf2.encrypt(PASSWORD, salt);
         } catch (RuntimeException e) {
@@ -64,7 +65,7 @@ public class Pbkdf2Test extends AndroidTestCase {
 
     public void testThrowExceptionWithPoorIterationProvided() throws Exception {
         try {
-            Pbkdf2 pbkdf2 = new Pbkdf2();
+            Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
             byte[] salt = new Random().randomBytes();
             int iterations = 42;
             pbkdf2.encrypt(PASSWORD, salt, iterations);

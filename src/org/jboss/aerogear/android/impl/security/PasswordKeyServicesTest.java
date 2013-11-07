@@ -23,47 +23,46 @@ public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestC
     }
     
     public void testPasswordKeyServicesEncrypt() {
-        PasswordKeyServices service = new PasswordKeyServices();
         String message = "This is a test message";
-        CryptoConfig config = new CryptoConfig();
+        PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
-        service.setPhrase("testPhrase");
-        CryptoBox box = service.getCrypto(getActivity(), config);
-        byte[] encrypted = box.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
+        config.setPassword("testPhrase");
+        
+        PasswordKeyServices service = new PasswordKeyServices(config, getActivity());
+        byte[] encrypted = service.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
         
         assertFalse(Arrays.equals(encrypted, message.getBytes()));
-        byte[] decrypted = box.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
+        byte[] decrypted = service.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
         assertTrue(Arrays.equals(decrypted, message.getBytes()));
         
     }
     
     
     public void testPasswordKeyServicesEncryptShareKey() {
-        PasswordKeyServices service = new PasswordKeyServices();
-        PasswordKeyServices service2 = new PasswordKeyServices();
-        String message = "This is a test message";
-        CryptoConfig config = new CryptoConfig();
+        PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
-        service.setPhrase("testPhrase");
-        service2.setPhrase("testPhrase");
-        CryptoBox box = service.getCrypto(getActivity(), config);
-        byte[] encrypted = box.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
+        config.setPassword("testPhrase");
+        
+        PasswordKeyServices service = new PasswordKeyServices(config, getActivity());
+        PasswordKeyServices service2 = new PasswordKeyServices(config, getActivity());
+        String message = "This is a test message";
+        
+        
+        byte[] encrypted = service.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
         
         assertFalse(Arrays.equals(encrypted, message.getBytes()));
-        box = service2.getCrypto(getActivity(), config);
-        byte[] decrypted = box.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
+        byte[] decrypted = service2.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
         assertTrue(Arrays.equals(decrypted, message.getBytes()));
     }
     
     public void testBadpassPhraseCrashes() {
-        PasswordKeyServices service = new PasswordKeyServices();
-        
         String message = "This is a test message";
-        CryptoConfig config = new CryptoConfig();
+        PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
-        service.setPhrase("failPhrase");
+        config.setPassword("failPhrase");
+        
         try {
-            service.getCrypto(getActivity(), config);
+            new PasswordKeyServices(config, getActivity());
         } catch (Exception e) {
             return;
         }
