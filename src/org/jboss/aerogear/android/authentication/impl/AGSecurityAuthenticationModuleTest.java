@@ -300,7 +300,11 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         latch.await(5000, TimeUnit.MILLISECONDS);
 
         Assert.assertNotNull(callback.exception);
-        Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
+        Throwable cause = callback.exception;
+        if (callback.exception.getCause() != null) {
+            cause = callback.exception.getCause();
+        }
+        Assert.assertEquals(SocketTimeoutException.class, cause.getClass());
 
     }
 }
