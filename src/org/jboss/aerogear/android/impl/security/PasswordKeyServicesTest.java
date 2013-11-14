@@ -6,12 +6,9 @@
 
 package org.jboss.aerogear.android.impl.security;
 
-import android.util.Log;
 import java.util.Arrays;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
-import org.jboss.aerogear.android.security.CryptoConfig;
-import org.jboss.aerogear.crypto.CryptoBox;
 import org.jboss.aerogear.fixture.TestVectors;
 
 public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
@@ -21,6 +18,21 @@ public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestC
     public PasswordKeyServicesTest() {
         super(MainActivity.class);
     }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        
+        //Generate the keyStore with the correct password.
+        PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordKeyServices.PasswordProtectedKeystoreCryptoConfig();
+        config.setAlias("TestAlias");
+        config.setPassword("testPhrase");
+        
+        PasswordKeyServices service = new PasswordKeyServices(config, getActivity());
+        
+    }
+    
+    
     
     public void testPasswordKeyServicesEncrypt() {
         String message = "This is a test message";
