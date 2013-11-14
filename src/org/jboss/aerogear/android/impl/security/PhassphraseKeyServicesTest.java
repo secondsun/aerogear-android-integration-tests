@@ -2,14 +2,9 @@ package org.jboss.aerogear.android.impl.security;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
-import org.jboss.aerogear.android.security.CryptoConfig;
-import org.jboss.aerogear.crypto.CryptoBox;
-import org.jboss.aerogear.fixture.TestVectors;
 
 
 public class PhassphraseKeyServicesTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
