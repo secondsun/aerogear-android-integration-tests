@@ -75,9 +75,9 @@
         <version.com.google.code.gson>2.2.2</version.com.google.code.gson>
         <version.com.google.guava>13.0.1</version.com.google.guava>
         <version.com.googlecode.maven.java.formatter>0.3.1</version.com.googlecode.maven.java.formatter>
-        <version.com.jayway.maven.plugins.android.generation2>3.7.0</version.com.jayway.maven.plugins.android.generation2>
+        <version.com.jayway.maven.plugins.android.generation2>3.8.0</version.com.jayway.maven.plugins.android.generation2>
         <version.emma>2.1.5320</version.emma>
-        <android.target.sdk.platform>17</android.target.sdk.platform>
+        <android.target.sdk.platform>19</android.target.sdk.platform>
         <android.debug>false</android.debug>
     </properties>
 
