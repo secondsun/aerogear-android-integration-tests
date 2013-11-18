@@ -27,10 +27,10 @@ import org.jboss.aerogear.android.authentication.AuthenticationConfig;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 
-import android.test.ActivityInstrumentationTestCase2;
 import org.jboss.aerogear.android.authentication.AuthType;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class AuthenticatorTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class AuthenticatorTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public AuthenticatorTest() {
         super(MainActivity.class);

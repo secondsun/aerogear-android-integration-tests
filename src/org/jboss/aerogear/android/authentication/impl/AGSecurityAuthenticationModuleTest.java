@@ -17,7 +17,6 @@
 
 package org.jboss.aerogear.android.authentication.impl;
 
-import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Provider;
@@ -37,8 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationTestCase2 implements AuthenticationModuleTest {
+public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumentationTestCase implements AuthenticationModuleTest {
 
     private static final URL SIMPLE_URL;
     private static final URL LIVE_URL;
@@ -300,7 +300,11 @@ public class AGSecurityAuthenticationModuleTest extends ActivityInstrumentationT
         latch.await(5000, TimeUnit.MILLISECONDS);
 
         Assert.assertNotNull(callback.exception);
-        Assert.assertEquals(SocketTimeoutException.class, callback.exception.getCause().getClass());
+        Throwable cause = callback.exception;
+        if (callback.exception.getCause() != null) {
+            cause = callback.exception.getCause();
+        }
+        Assert.assertEquals(SocketTimeoutException.class, cause.getClass());
 
     }
 }

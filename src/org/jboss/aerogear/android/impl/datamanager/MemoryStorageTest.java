@@ -32,9 +32,9 @@ import org.jboss.aerogear.android.impl.reflection.RecordIdNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.test.ActivityInstrumentationTestCase2;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class MemoryStorageTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class MemoryStorageTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public MemoryStorageTest() {
         super(MainActivity.class);

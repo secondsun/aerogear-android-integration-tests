@@ -17,7 +17,6 @@
 
 package org.jboss.aerogear.android.authentication.impl;
 
-import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Callback;
@@ -28,11 +27,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 
-public class GeneralAuthenticationModuleTest extends ActivityInstrumentationTestCase2<MainActivity> implements AuthenticationModuleTest {
+public class GeneralAuthenticationModuleTest extends PatchedActivityInstrumentationTestCase<MainActivity> implements AuthenticationModuleTest {
 
     public GeneralAuthenticationModuleTest() {
         super(MainActivity.class);

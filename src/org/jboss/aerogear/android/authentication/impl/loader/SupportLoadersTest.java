@@ -19,7 +19,6 @@ package org.jboss.aerogear.android.authentication.impl.loader;
 
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.test.ActivityInstrumentationTestCase2;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -38,12 +37,13 @@ import org.jboss.aerogear.android.authentication.impl.loader.support.SupportEnro
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLoginLoader;
 import org.jboss.aerogear.android.authentication.impl.loader.support.SupportLogoutLoader;
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class SupportLoadersTest  extends ActivityInstrumentationTestCase2<MainFragmentActivity> {
+public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<MainFragmentActivity> {
 
     public SupportLoadersTest() {
         super(MainFragmentActivity.class);
