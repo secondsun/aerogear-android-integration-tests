@@ -80,8 +80,6 @@
         <proguard.skip>true</proguard.skip>
 
         <emma.version>2.1.5320</emma.version>
-
-        <version.com.googlecode.maven.java.formatter>0.3.1</version.com.googlecode.maven.java.formatter>
     </properties>
 
     <dependencies>
@@ -218,15 +216,6 @@
                         </artifactItem>
                     </artifactItems>
                     <outputDirectory>${basedir}/libs</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-                <artifactId>maven-java-formatter-plugin</artifactId>
-                <version>${version.com.googlecode.maven.java.formatter}</version>
-                <configuration>
-                    <configFile>${project.basedir}/support/eclipse-formatting.xml</configFile>
-                    <lineEnding>LF</lineEnding>
                 </configuration>
             </plugin>
         </plugins>
