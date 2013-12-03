@@ -21,7 +21,7 @@
 
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-android-integration-tests</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <url>http://aerogear.org</url>
     <packaging>apk</packaging>
     <name>AeroGear Android integration tests</name>
