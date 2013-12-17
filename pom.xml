@@ -31,7 +31,7 @@
         <artifactId>aerogear-parent</artifactId>
         <version>0.1.0</version>
     </parent>
-
+    
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -79,7 +79,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <proguard.skip>true</proguard.skip>
 
-        <emma.version>2.1.5320</emma.version>
+        <version.emma>2.0.5312</version.emma>
     </properties>
 
     <dependencies>
@@ -219,11 +219,9 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
     <profiles>
-
         <profile>
             <id>emma</id>
             <dependencies>
@@ -316,8 +314,6 @@
                             </proguard>
                             <emma>
                                 <enable>true</enable>
-                                <!-- Specifically targets the class folders that get expanded when 
-                                    using the apklib dependency of appboy-android-sdk -->
                                 <classFolders>${project.basedir}/target/classes/</classFolders>
                                 <outputMetaFile>${project.basedir}/target/emma/coverage.em</outputMetaFile>
                             </emma>
@@ -335,8 +331,7 @@
                             </sdk>
                         </configuration>
                         <extensions>true</extensions>
-                        <!-- Pulls the coverage.ec file from the running emulator into the 
-                            local filesystem. -->
+                        <!-- Pulls the coverage.ec file from the running emulator into the local filesystem. -->
                         <executions>
                             <execution>
                                 <id>pull-coverage</id>
@@ -352,11 +347,10 @@
                         </executions>
                     </plugin>
                     <plugin>
+                        <!-- Grab it from here -->
+                        <!-- git clone https://github.com/sonatype/emma4it-maven-plugin.git -->
                         <groupId>org.sonatype.maven.plugin</groupId>
                         <artifactId>emma4it-maven-plugin</artifactId>
-                        <!-- The 1.4-SNAPSHOT version is the local version of the Appboy fork 
-                            of emma4it which was upgraded to depend on a more modern version of EMMA. 
-                            Install it by running mvn clean install on the repo at https://github.com/Appboy/emma4it-maven-plugin -->
                         <version>1.4-SNAPSHOT</version>
                         <executions>
                             <execution>
@@ -387,7 +381,6 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 
 </project>
