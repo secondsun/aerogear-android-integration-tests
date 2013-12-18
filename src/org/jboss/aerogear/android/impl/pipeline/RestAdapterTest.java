@@ -256,7 +256,7 @@ public class RestAdapterTest extends AndroidTestCase {
     }
 
     public void testGsonBuilderProperty() throws Exception {
-       GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Point.class, new RestAdapterTest.PointTypeAdapter());
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Point.class, new RestAdapterTest.PointTypeAdapter());
 
         final ByteArrayOutputStream request = new ByteArrayOutputStream();
 
@@ -313,7 +313,7 @@ public class RestAdapterTest extends AndroidTestCase {
         });
 
         latch.await(2, TimeUnit.SECONDS);
-        
+
         String expectedJSONString = new JSONObject(SERIALIZED_POINTS).toString();
         String requestAsJSONString = new JSONObject(new String(request.toByteArray())).toString();
         assertEquals(expectedJSONString, requestAsJSONString);
@@ -361,7 +361,7 @@ public class RestAdapterTest extends AndroidTestCase {
 
         AuthenticationModule urlModule = mock(AuthenticationModule.class);
         when(urlModule.isLoggedIn()).thenReturn(true);
-        when(urlModule.getAuthorizationFields((URI)anyObject(),(String)anyObject(),(byte[])anyObject())).thenReturn(authFields);
+        when(urlModule.getAuthorizationFields((URI) anyObject(), (String) anyObject(), (byte[]) anyObject())).thenReturn(authFields);
 
         PipeConfig config = new PipeConfig(url, Data.class);
         config.setAuthModule(urlModule);
@@ -520,7 +520,6 @@ public class RestAdapterTest extends AndroidTestCase {
 
     }
 
-    
     public void testRunTimeout() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
@@ -547,7 +546,7 @@ public class RestAdapterTest extends AndroidTestCase {
         assertTrue(onFailCalled.get());
         assertEquals(SocketTimeoutException.class, exceptionReference.get().getCause().getClass());
     }
-    
+
     private <T> List<T> runRead(Pipe<T> restPipe) throws InterruptedException {
         return runRead(restPipe, null);
     }

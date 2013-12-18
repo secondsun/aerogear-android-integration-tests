@@ -59,7 +59,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 SIMPLE_URL, new AuthenticationConfig());
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
-        HttpProvider provider = (HttpProvider) ((Provider)UnitTestUtils.getSuperPrivateField(
+        HttpProvider provider = (HttpProvider) ((Provider) UnitTestUtils.getSuperPrivateField(
                 runner, "httpProviderFactory")).get(SIMPLE_URL);
         Assert.assertEquals(SIMPLE_URL, provider.getUrl());
 
@@ -74,20 +74,20 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
-            @Override
-            public HttpProvider get(Object... in) {
-                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HeaderAndBody post(String ignore)
-                            throws RuntimeException {
-                        try {
-                            throw new HttpException(new byte[1], 403);
-                        } finally {
-                        }
+                    public HttpProvider get(Object... in) {
+                        return new HttpStubProvider(SIMPLE_URL) {
+                            @Override
+                            public HeaderAndBody post(String ignore)
+                                    throws RuntimeException {
+                                try {
+                                    throw new HttpException(new byte[1], 403);
+                                } finally {
+                                }
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
 
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
@@ -106,19 +106,19 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
-            @Override
-            public HttpProvider get(Object... in) {
-                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HeaderAndBody post(String ignore)
-                            throws RuntimeException {
-                        HashMap<String, Object> headers = new HashMap<String, Object>();
-                        return new HeaderAndBody(new byte[1], headers);
+                    public HttpProvider get(Object... in) {
+                        return new HttpStubProvider(SIMPLE_URL) {
+                            @Override
+                            public HeaderAndBody post(String ignore)
+                                    throws RuntimeException {
+                                HashMap<String, Object> headers = new HashMap<String, Object>();
+                                return new HeaderAndBody(new byte[1], headers);
 
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
 
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
@@ -136,19 +136,19 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
-            @Override
-            public HttpProvider get(Object... in) {
-                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HeaderAndBody post(String enrollData)
-                            throws RuntimeException {
-                        HashMap<String, Object> headers = new HashMap<String, Object>();
-                        return new HeaderAndBody(new byte[1], headers);
+                    public HttpProvider get(Object... in) {
+                        return new HttpStubProvider(SIMPLE_URL) {
+                            @Override
+                            public HeaderAndBody post(String enrollData)
+                                    throws RuntimeException {
+                                HashMap<String, Object> headers = new HashMap<String, Object>();
+                                return new HeaderAndBody(new byte[1], headers);
 
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
         SimpleCallback callback = new SimpleCallback(latch);
 
         Map<String, String> userData = new HashMap<String, String>();
@@ -175,23 +175,23 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
-            @Override
-            public HttpProvider get(Object... in) {
-                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HeaderAndBody post(String ignore)
-                            throws RuntimeException {
-                        try {
-                            HashMap<String, Object> headers = new HashMap<String, Object>();
-                            return new HeaderAndBody(new byte[1],
-                                    headers);
-                        } finally {
-                            latch.countDown();
-                        }
+                    public HttpProvider get(Object... in) {
+                        return new HttpStubProvider(SIMPLE_URL) {
+                            @Override
+                            public HeaderAndBody post(String ignore)
+                                    throws RuntimeException {
+                                try {
+                                    HashMap<String, Object> headers = new HashMap<String, Object>();
+                                    return new HeaderAndBody(new byte[1],
+                                            headers);
+                                } finally {
+                                    latch.countDown();
+                                }
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
 
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
 
@@ -206,24 +206,24 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         final CountDownLatch latch2 = new CountDownLatch(1);
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
-            @Override
-            public HttpProvider get(Object... in) {
-                return new HttpStubProvider(SIMPLE_URL) {
                     @Override
-                    public HeaderAndBody post(String ignore)
-                            throws RuntimeException {
-                        try {
-                            HashMap<String, Object> headers = new HashMap<String, Object>();
+                    public HttpProvider get(Object... in) {
+                        return new HttpStubProvider(SIMPLE_URL) {
+                            @Override
+                            public HeaderAndBody post(String ignore)
+                                    throws RuntimeException {
+                                try {
+                                    HashMap<String, Object> headers = new HashMap<String, Object>();
 
-                            return new HeaderAndBody(new byte[1],
-                                    headers);
-                        } finally {
-                            latch2.countDown();
-                        }
+                                    return new HeaderAndBody(new byte[1],
+                                            headers);
+                                } finally {
+                                    latch2.countDown();
+                                }
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
 
         module.logout(voidCallback);
 
@@ -261,7 +261,6 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 LIVE_URL, config);
 
-
         final CountDownLatch latch = new CountDownLatch(1);
 
         SimpleCallback callback = new SimpleCallback(latch);
@@ -274,7 +273,6 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         userData.put("role", "admin");
 
         module.enroll(userData, callback);
-
 
         latch.await(50000, TimeUnit.MILLISECONDS);
 
@@ -289,7 +287,6 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
 
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 LIVE_URL, config);
-
 
         final CountDownLatch latch = new CountDownLatch(1);
 

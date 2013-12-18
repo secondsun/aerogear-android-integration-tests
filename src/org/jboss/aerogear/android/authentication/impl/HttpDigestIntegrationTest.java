@@ -35,15 +35,15 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import android.util.Log;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
-public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTestCase implements AuthenticationModuleTest {
-    
+public class HttpDigestIntegrationTest extends PatchedActivityInstrumentationTestCase implements AuthenticationModuleTest {
+
     private static final URL CONTROLLER_URL;
     private static final PipeConfig AUTOBOT_CONFIG;
     private static final Pipeline PIPELINE;
     private static final Authenticator AUTHENTICATOR;
     private static final AuthenticationConfig AUTHENTICATION_CONFIG;
-	protected static final String TAG = HttpDigestIntegrationTest.class.getSimpleName();
-    
+    protected static final String TAG = HttpDigestIntegrationTest.class.getSimpleName();
+
     static {
         try {
             CONTROLLER_URL = new URL("http://controller-aerogear.rhcloud.com/aerogear-controller-demo/");
@@ -54,13 +54,12 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
             AUTHENTICATION_CONFIG = new AuthenticationConfig();
             AUTHENTICATION_CONFIG.setAuthType(AuthTypes.HTTP_DIGEST);
             AUTHENTICATION_CONFIG.setLoginEndpoint("/autobots");
-            
-            
+
         } catch (MalformedURLException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public HttpDigestIntegrationTest() {
         super(MainActivity.class);
     }
@@ -72,22 +71,21 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
         final CountDownLatch authLatch = new CountDownLatch(1);
         basicAuthModule.login("baduser", "badpass", new Callback<HeaderAndBody>() {
 
-			@Override
-			public void onFailure(Exception ex) {
-				Log.e(TAG, ex.getMessage(), ex);
-				authLatch.countDown();
-			}
+            @Override
+            public void onFailure(Exception ex) {
+                Log.e(TAG, ex.getMessage(), ex);
+                authLatch.countDown();
+            }
 
-			@Override
-			public void onSuccess(HeaderAndBody arg0) {
-				authLatch.countDown();
-			}
-		});
-        authLatch.await(10,  TimeUnit.SECONDS);
+            @Override
+            public void onSuccess(HeaderAndBody arg0) {
+                authLatch.countDown();
+            }
+        });
+        authLatch.await(10, TimeUnit.SECONDS);
         Pipe<String> autobots = PIPELINE.pipe(String.class, AUTOBOT_CONFIG);
         final CountDownLatch latch = new CountDownLatch(1);
-        
-        
+
         autobots.read(new Callback<List<String>>() {
 
             @Override
@@ -98,15 +96,15 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
 
             @Override
             public void onFailure(Exception e) {
-            	latch.countDown();
+                latch.countDown();
             }
         });
-        
+
         latch.await(10, TimeUnit.SECONDS);
         assertFalse(success.get());
-    
+
     }
-    
+
     public void testLogin() throws InterruptedException {
         HttpDigestAuthenticationModule basicAuthModule = new HttpDigestAuthenticationModule(CONTROLLER_URL, AUTHENTICATION_CONFIG);
         final AtomicBoolean success = new AtomicBoolean(false);
@@ -114,22 +112,21 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
         final CountDownLatch authLatch = new CountDownLatch(1);
         basicAuthModule.login("agnes", "123", new Callback<HeaderAndBody>() {
 
-			@Override
-			public void onFailure(Exception ex) {
-				Log.e(TAG, ex.getMessage(), ex);
-				authLatch.countDown();
-			}
+            @Override
+            public void onFailure(Exception ex) {
+                Log.e(TAG, ex.getMessage(), ex);
+                authLatch.countDown();
+            }
 
-			@Override
-			public void onSuccess(HeaderAndBody arg0) {
-				authLatch.countDown();
-			}
-		});
-        authLatch.await(10,  TimeUnit.SECONDS);
+            @Override
+            public void onSuccess(HeaderAndBody arg0) {
+                authLatch.countDown();
+            }
+        });
+        authLatch.await(10, TimeUnit.SECONDS);
         Pipe<String> autobots = PIPELINE.pipe(String.class, AUTOBOT_CONFIG);
         final CountDownLatch latch = new CountDownLatch(1);
-        
-        
+
         autobots.read(new Callback<List<String>>() {
 
             @Override
@@ -140,16 +137,15 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
 
             @Override
             public void onFailure(Exception ex) {
-            	Log.e(TAG, ex.getMessage(), ex);
-            	latch.countDown();
+                Log.e(TAG, ex.getMessage(), ex);
+                latch.countDown();
             }
         });
-        
+
         latch.await(1000, TimeUnit.SECONDS);
         assertTrue(success.get());
     }
-    
-    
+
     public void testLogout() throws InterruptedException {
         HttpDigestAuthenticationModule basicAuthModule = new HttpDigestAuthenticationModule(CONTROLLER_URL, AUTHENTICATION_CONFIG);
         final AtomicBoolean success = new AtomicBoolean(false);
@@ -157,22 +153,21 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
         final CountDownLatch authLatch = new CountDownLatch(1);
         basicAuthModule.login("agnes", "123", new Callback<HeaderAndBody>() {
 
-			@Override
-			public void onFailure(Exception ex) {
-				Log.e(TAG, ex.getMessage(), ex);
-				authLatch.countDown();
-			}
+            @Override
+            public void onFailure(Exception ex) {
+                Log.e(TAG, ex.getMessage(), ex);
+                authLatch.countDown();
+            }
 
-			@Override
-			public void onSuccess(HeaderAndBody arg0) {
-				authLatch.countDown();
-			}
-		});
-        authLatch.await(10,  TimeUnit.SECONDS);
+            @Override
+            public void onSuccess(HeaderAndBody arg0) {
+                authLatch.countDown();
+            }
+        });
+        authLatch.await(10, TimeUnit.SECONDS);
         Pipe<String> autobots = PIPELINE.pipe(String.class, AUTOBOT_CONFIG);
         final CountDownLatch latch = new CountDownLatch(1);
-        
-        
+
         autobots.read(new Callback<List<String>>() {
 
             @Override
@@ -183,15 +178,15 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
 
             @Override
             public void onFailure(Exception e) {
-            	latch.countDown();
+                latch.countDown();
             }
         });
-        
+
         latch.await(10, TimeUnit.SECONDS);
         assertTrue(success.get());
-        
+
         final CountDownLatch latch2 = new CountDownLatch(1);
-        
+
         final CountDownLatch logoutLatch = new CountDownLatch(1);
         basicAuthModule.logout(new VoidCallback(logoutLatch));
         logoutLatch.await();
@@ -206,15 +201,13 @@ public class HttpDigestIntegrationTest  extends PatchedActivityInstrumentationTe
             @Override
             public void onFailure(Exception e) {
                 success.set(false);
-            	latch2.countDown();
+                latch2.countDown();
             }
         });
-        
+
         latch2.await(10, TimeUnit.SECONDS);
         assertFalse(success.get());
-        
-        
+
     }
 
-    
 }

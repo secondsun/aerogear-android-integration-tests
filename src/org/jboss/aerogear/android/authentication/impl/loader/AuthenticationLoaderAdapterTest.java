@@ -31,9 +31,9 @@ import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.*;
+
 public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
 
-    
     private static String USERNAME_VALUE = "testUsername";
     private static String PASSWORD_VALUE = "testPassword";
     private Activity activity;
@@ -43,7 +43,7 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
     private ArgumentCaptor<Bundle> bundleMatcher;
     private VoidCallback callback;
     private AuthenticationModule module = mock(AuthenticationModule.class);
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -81,7 +81,6 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
         assertEquals(userData, bundle.get(PARAMS));
 
-
     }
 
     public void testActivityLogout() {
@@ -105,7 +104,6 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
         assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
 
-
     }
 
     public void testFragmentEnroll() {
@@ -117,7 +115,6 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertNotNull(bundle);
         assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
         assertEquals(userData, bundle.get(PARAMS));
-
 
     }
 
@@ -131,7 +128,6 @@ public class AuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertEquals("LOGOUT", ((Enum) bundle.get(METHOD)).name());
         assertEquals(callback, bundle.get(CALLBACK));
     }
-    
 
     private Map<String, String> makeUserData() {
         Map<String, String> toReturn = new HashMap<String, String>();

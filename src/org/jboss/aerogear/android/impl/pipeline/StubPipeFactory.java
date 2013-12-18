@@ -62,7 +62,7 @@ public class StubPipeFactory implements PipeFactory {
             @Override
             public void read(ReadFilter filer, Callback callback) {
             }
-            
+
             @Override
             public void readWithFilter(ReadFilter filer, Callback callback) {
             }
@@ -92,12 +92,12 @@ public class StubPipeFactory implements PipeFactory {
 
             @Override
             public RequestBuilder getRequestBuilder() {
-                    return null;
+                return null;
             }
 
             @Override
             public ResponseParser getResponseParser() {
-                    return null;
+                return null;
             }
 
         };

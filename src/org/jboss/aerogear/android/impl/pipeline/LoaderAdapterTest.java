@@ -79,7 +79,7 @@ import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings( { "unchecked", "rawtypes" })
 public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public LoaderAdapterTest() {
@@ -133,22 +133,22 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
                 Point.class, new PointTypeAdapter());
-        
+
         final HttpStubProvider provider = mock(HttpStubProvider.class);
         when(provider.getUrl()).thenReturn(url);
-        
-        when(provider.post((byte[])anyObject()))
-            .thenReturn(new HeaderAndBody(
+
+        when(provider.post((byte[]) anyObject()))
+                .thenReturn(new HeaderAndBody(
                             SERIALIZED_POINTS.getBytes(),
                             new HashMap<String, Object>())
                        );
-        
-        when(provider.put(any(String.class), (byte[])anyObject()))
-            .thenReturn(new HeaderAndBody(
+
+        when(provider.put(any(String.class), (byte[]) anyObject()))
+                .thenReturn(new HeaderAndBody(
                             SERIALIZED_POINTS.getBytes(),
                             new HashMap<String, Object>())
                        );
-        
+
         PipeConfig config = new PipeConfig(url,
                 LoaderAdapterTest.ListClassId.class);
         config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
@@ -171,19 +171,18 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
 
         runSave(adapter);
 
-        verify(provider).put(any(String.class), (byte[])anyObject());
+        verify(provider).put(any(String.class), (byte[]) anyObject());
 
     }
-    
+
     public void testSingleObjectDelete() throws Exception {
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
                 Point.class, new PointTypeAdapter());
-        
+
         final HttpStubProvider provider = mock(HttpStubProvider.class);
         when(provider.getUrl()).thenReturn(url);
-        
-        
+
         PipeConfig config = new PipeConfig(url,
                 LoaderAdapterTest.ListClassId.class);
         config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
@@ -209,12 +208,12 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
         verify(provider).delete(eq("1"));
 
     }
-    
+
     public void testMultipleCallsToLoadCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
-        ReadLoader loader = new ReadLoader(getActivity(), null, handler, null, null){
+        when(handler.onReadWithFilter((ReadFilter) any(), (Pipe) any())).thenReturn(new ArrayList());
+        ReadLoader loader = new ReadLoader(getActivity(), null, handler, null, null) {
 
             @Override
             public void deliverResult(Object data) {
@@ -226,26 +225,25 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
             public void forceLoad() {
                 throw new IllegalStateException("Should not be called");
             }
-            
+
             @Override
             public void onStartLoading() {
-            	super.onStartLoading();
+                super.onStartLoading();
             }
-            
+
         };
         loader.loadInBackground();
         UnitTestUtils.callMethod(loader, "onStartLoading");
-        
+
         assertTrue(called.get());
-        
+
     }
-    
-    
+
     public void testMultipleCallsToSaveCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
         when(handler.onSave(any())).thenReturn(new ArrayList());
-        SaveLoader loader = new SaveLoader(getActivity(), null, handler, null){
+        SaveLoader loader = new SaveLoader(getActivity(), null, handler, null) {
 
             @Override
             public void deliverResult(Object data) {
@@ -257,25 +255,25 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
             public void forceLoad() {
                 throw new IllegalStateException("Should not be called");
             }
-            
+
             @Override
             public void onStartLoading() {
-            	super.onStartLoading();
+                super.onStartLoading();
             }
-            
+
         };
         loader.loadInBackground();
         UnitTestUtils.callMethod(loader, "onStartLoading");
-        
+
         assertTrue(called.get());
-        
+
     }
-    
+
     public void testMultipleCallsToRemoveCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onReadWithFilter((ReadFilter)any(), (Pipe)any())).thenReturn(new ArrayList());
-        RemoveLoader loader = new RemoveLoader(getActivity(), null, handler, null){
+        when(handler.onReadWithFilter((ReadFilter) any(), (Pipe) any())).thenReturn(new ArrayList());
+        RemoveLoader loader = new RemoveLoader(getActivity(), null, handler, null) {
 
             @Override
             public void deliverResult(Object data) {
@@ -287,20 +285,20 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
             public void forceLoad() {
                 throw new IllegalStateException("Should not be called");
             }
-            
+
             @Override
             public void onStartLoading() {
-            	super.onStartLoading();
+                super.onStartLoading();
             }
-            
+
         };
         loader.loadInBackground();
         UnitTestUtils.callMethod(loader, "onStartLoading");
-        
+
         assertTrue(called.get());
-        
+
     }
-    
+
     private <T> List<T> runRead(Pipe<T> restPipe) throws InterruptedException {
         return runRead(restPipe, null);
     }
@@ -318,9 +316,9 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
         final AtomicReference<List<T>> resultRef = new AtomicReference<List<T>>();
 
         restPipe.read(readFilter, new Callback<List<T>>() {
-			private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public void onSuccess(List<T> data) {
                 resultRef.set(data);
                 latch.countDown();
@@ -350,11 +348,11 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
             throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicBoolean hasException = new AtomicBoolean(false);
-        
-        restPipe.remove(id, new Callback<Void>() {
-			private static final long serialVersionUID = 1L;
 
-			@Override
+        restPipe.remove(id, new Callback<Void>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
             public void onSuccess(Void data) {
                 latch.countDown();
             }
@@ -376,29 +374,29 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
             throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicBoolean hasException = new AtomicBoolean(false);
-        
-        restPipe.save(new ListClassId(true), 
+
+        restPipe.save(new ListClassId(true),
                       new Callback<ListClassId>() {
-			private static final long serialVersionUID = 1L;
+                          private static final long serialVersionUID = 1L;
 
-			@Override
-                        public void onSuccess(ListClassId data) {
-                            latch.countDown();
-                        }
+                          @Override
+                          public void onSuccess(ListClassId data) {
+                              latch.countDown();
+                          }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            hasException.set(true);
-                            Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
-                                    .log(Level.SEVERE, e.getMessage(), e);
-                            latch.countDown();
-                        }
+                          @Override
+                          public void onFailure(Exception e) {
+                              hasException.set(true);
+                              Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
+                                      .log(Level.SEVERE, e.getMessage(), e);
+                              latch.countDown();
+                          }
                       });
 
         latch.await(2, TimeUnit.SECONDS);
         Assert.assertFalse(hasException.get());
     }
-    
+
     public void testRunReadWithFilter() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);

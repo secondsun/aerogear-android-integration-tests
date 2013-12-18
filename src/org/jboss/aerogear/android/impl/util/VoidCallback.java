@@ -22,35 +22,34 @@ import org.jboss.aerogear.android.Callback;
 
 public final class VoidCallback implements Callback {
 
-	public Exception exception;
-	private CountDownLatch latch;
+    public Exception exception;
+    private CountDownLatch latch;
 
-	public VoidCallback() {
-	}
-	
-	public VoidCallback(CountDownLatch latch) {
-		this.latch = latch;
-	}
+    public VoidCallback() {
+    }
 
-	@Override
-	public void onSuccess(Object data) {
-		if (latch != null) {
-			latch.countDown();
-		}
-	}
+    public VoidCallback(CountDownLatch latch) {
+        this.latch = latch;
+    }
 
-	@Override
-	public void onFailure(Exception e) {
-		this.exception = e;
-                if (latch != null) {
-			latch.countDown();
-		}
-	}
+    @Override
+    public void onSuccess(Object data) {
+        if (latch != null) {
+            latch.countDown();
+        }
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+        this.exception = e;
+        if (latch != null) {
+            latch.countDown();
+        }
+    }
 
     @Override
     public int hashCode() {
         return 1;
     }
-        
-        
+
 }

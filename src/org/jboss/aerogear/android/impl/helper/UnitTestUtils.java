@@ -90,13 +90,12 @@ public class UnitTestUtils {
             IllegalArgumentException, IllegalAccessException {
         Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
-        T object =  (T) field.get(target);
+        T object = (T) field.get(target);
         object = Mockito.spy(object);
         setPrivateField(target, fieldName, object);
         return object;
     }
 
-    
     public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
         Collections.addAll(fields, type.getDeclaredFields());
 
@@ -133,11 +132,11 @@ public class UnitTestUtils {
     public static Object getPrivateEnum(Class<SupportAuthenticationModuleAdapter> klass, String enumName, String constantName) {
         for (Class declaredClass : klass.getDeclaredClasses()) {
             if (declaredClass.getCanonicalName().equals(enumName)) {
-            	for (Object t : declaredClass.getEnumConstants()) {
-            		if (t.toString().equals(constantName)) {
-            			return t;
-            		}
-            	}
+                for (Object t : declaredClass.getEnumConstants()) {
+                    if (t.toString().equals(constantName)) {
+                        return t;
+                    }
+                }
             }
         }
         return null;

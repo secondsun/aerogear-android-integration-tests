@@ -59,12 +59,12 @@ public class AuthenticatorTest extends PatchedActivityInstrumentationTestCase<Ma
             Authenticator authenticator = new Authenticator(SIMPLE_URL);
             AuthenticationConfig config = new AuthenticationConfig();
             config.setAuthType(new AuthType() {
-				
-				@Override
-				public String getName() {
-					return "SimpleAuthType";
-				}
-			});
+
+                @Override
+                public String getName() {
+                    return "SimpleAuthType";
+                }
+            });
 
             AuthenticationModule simpleAuthModule = authenticator.auth(
                     SIMPLE_MODULE_NAME, config);

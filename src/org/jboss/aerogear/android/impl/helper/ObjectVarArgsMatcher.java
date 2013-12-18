@@ -26,33 +26,33 @@ import org.mockito.internal.matchers.VarargMatcher;
  * @see LoaderAdapterTest.java line 378
  */
 public class ObjectVarArgsMatcher extends ArgumentMatcher<Object> implements
-		VarargMatcher {
+        VarargMatcher {
 
-	private static final long serialVersionUID = 1L;
-	private Object[] expectedValues;
+    private static final long serialVersionUID = 1L;
+    private Object[] expectedValues;
 
-	public ObjectVarArgsMatcher(Object... expectedValues) {
-		this.expectedValues = expectedValues;
-	}
+    public ObjectVarArgsMatcher(Object... expectedValues) {
+        this.expectedValues = expectedValues;
+    }
 
-	@Override
-	public boolean matches(Object varargArgument) {
-		boolean equals = true;
+    @Override
+    public boolean matches(Object varargArgument) {
+        boolean equals = true;
 
-		if (!varargArgument.getClass().isArray()) {
-			return expectedValues[0].equals(varargArgument);
-		} else {
-			Object[] args = (Object[]) varargArgument;
-			if (args.length != expectedValues.length) {
-				return false;
-			} else {
-				for (int i = 0; i < args.length; i++) {
-					equals &= args[i].equals(expectedValues[i]);
-				}
-			}
-		}
+        if (!varargArgument.getClass().isArray()) {
+            return expectedValues[0].equals(varargArgument);
+        } else {
+            Object[] args = (Object[]) varargArgument;
+            if (args.length != expectedValues.length) {
+                return false;
+            } else {
+                for (int i = 0; i < args.length; i++) {
+                    equals &= args[i].equals(expectedValues[i]);
+                }
+            }
+        }
 
-		return equals;
-	}
+        return equals;
+    }
 
 }

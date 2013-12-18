@@ -28,7 +28,7 @@ import org.jboss.aerogear.android.pipeline.support.AbstractFragmentActivityCallb
 import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallback;
 import org.mockito.Mockito;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings( { "unchecked", "rawtypes" })
 public class SupportAuthenticationCallbackTest extends AndroidTestCase {
 
     public void testPassSupportFragmentCallbacks() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
@@ -39,7 +39,7 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
         SupportLoginLoader loader = Mockito.mock(SupportLoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(fragmentCallback);
 
-        HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
+        HeaderAndBody data = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
         SupportAuthenticationModuleAdapter.CallbackHandler handler = new SupportAuthenticationModuleAdapter.CallbackHandler(adapter, loader, data);
         handler.run();
         assertTrue(fragmentCallback.successCalled);
@@ -57,7 +57,7 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
         Mockito.when(loader.hasException()).thenReturn(true);
         Mockito.when(loader.getException()).thenReturn(new RuntimeException("This is only a test exception."));
 
-        HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
+        HeaderAndBody data = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
         CallbackHandler handler = new CallbackHandler(adapter, loader, data);
         handler.run();
         assertTrue(fragmentCallback.failCalled);
@@ -73,7 +73,7 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
         SupportLoginLoader loader = Mockito.mock(SupportLoginLoader.class);
         Mockito.when(loader.getCallback()).thenReturn(activityCallback);
 
-        HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
+        HeaderAndBody data = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
         CallbackHandler handler = new CallbackHandler(adapter, loader, data);
         handler.run();
         assertTrue(activityCallback.successCalled);
@@ -91,7 +91,7 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
         Mockito.when(loader.hasException()).thenReturn(true);
         Mockito.when(loader.getException()).thenReturn(new RuntimeException("This is only a test exception."));
 
-        HeaderAndBody data = new HeaderAndBody(new byte[] {1,2,3,4}, new HashMap<String, Object>());
+        HeaderAndBody data = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
         CallbackHandler handler = new CallbackHandler(adapter, loader, data);
         handler.run();
         assertTrue(activityCallback.failCalled);
@@ -120,8 +120,8 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
             failCalled = true;
         }
     }
-    
-     private static class VoidFragmentActivityCallback extends AbstractFragmentActivityCallback<HeaderAndBody> {
+
+    private static class VoidFragmentActivityCallback extends AbstractFragmentActivityCallback<HeaderAndBody> {
 
         boolean successCalled = false;
         boolean failCalled = false;
@@ -143,5 +143,4 @@ public class SupportAuthenticationCallbackTest extends AndroidTestCase {
         }
     }
 
-    
 }

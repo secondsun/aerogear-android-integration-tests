@@ -63,12 +63,12 @@ public class HttpStubProvider implements HttpProvider {
 
     @Override
     public HeaderAndBody post(byte[] arg0) throws HttpException {
-    return response;
+        return response;
     }
 
     @Override
     public HeaderAndBody put(String arg0, byte[] arg1) throws HttpException {
-    return response;
+        return response;
     }
 
 }

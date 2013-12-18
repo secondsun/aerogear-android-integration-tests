@@ -29,7 +29,7 @@ import org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver;
 import org.jboss.aerogear.android.unifiedpush.MessageHandler;
 import org.jboss.aerogear.android.unifiedpush.Registrations;
 
-public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumentationTestCase<MainActivity> {
+public class AeroGearGCMMessageReceiverTests extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
     public AeroGearGCMMessageReceiverTests() {
         super(MainActivity.class);
@@ -43,9 +43,9 @@ public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumenta
         Registrations.registerMainThreadHandler(handler);
         IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
         Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE");
-        
+
         myIntent.putExtra("testKey", "testValue");
-        ctx.registerReceiver(receiver, filter);        
+        ctx.registerReceiver(receiver, filter);
         ctx.sendBroadcast(myIntent);
         latch.await(1, TimeUnit.SECONDS);
         assertEquals(TestMessageHandler.Result.MESSAGE, handler.resultType);
@@ -60,16 +60,15 @@ public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumenta
         Registrations.registerMainThreadHandler(handler);
         IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
         Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE").putExtra("message_type", "deleted_messages");
-        
+
         ctx.registerReceiver(receiver, filter);
         ctx.sendBroadcast(myIntent);
         latch.await(1, TimeUnit.SECONDS);
         assertEquals(TestMessageHandler.Result.DELETE, handler.resultType);
         assertEquals(myIntent.getExtras().getString("message_type"), handler.result.getString("message_type"));
-        
+
     }
 
-    
     public void testConsumeMessageError() throws InterruptedException {
         Context ctx = getActivity().getApplicationContext();
         AeroGearGCMMessageReceiver receiver = new AeroGearGCMMessageReceiver();
@@ -78,26 +77,29 @@ public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumenta
         Registrations.registerMainThreadHandler(handler);
         IntentFilter filter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
         Intent myIntent = new Intent("com.google.android.c2dm.intent.RECEIVE").putExtra("message_type", "send_error");
-        
+
         ctx.registerReceiver(receiver, filter);
         ctx.sendBroadcast(myIntent);
         latch.await(1, TimeUnit.SECONDS);
         assertEquals(TestMessageHandler.Result.ERROR, handler.resultType);
         assertEquals(null, handler.result);
-        
+
     }
-    
+
     private static final class TestMessageHandler implements MessageHandler {
 
         final CountDownLatch latch;
         Bundle result;
         Result resultType;
-        enum Result { DELETE, MESSAGE, ERROR};
+
+        enum Result {
+            DELETE, MESSAGE, ERROR
+        };
 
         public TestMessageHandler(CountDownLatch latch) {
             this.latch = latch;
         }
-        
+
         @Override
         public void onDeleteMessage(Context context, Bundle message) {
             resultType = Result.DELETE;
@@ -117,7 +119,7 @@ public class AeroGearGCMMessageReceiverTests  extends PatchedActivityInstrumenta
             resultType = Result.ERROR;
             latch.countDown();
         }
-    
+
     }
-    
+
 }

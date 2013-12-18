@@ -34,8 +34,8 @@ import android.test.AndroidTestCase;
 
 public class PagedListTest extends AndroidTestCase {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public void testNext() {
+    @SuppressWarnings( { "rawtypes", "unchecked" })
+    public void testNext() {
         Pipe pipe = mock(Pipe.class);
         ReadFilter next = new ReadFilter();
         List delegate = new ArrayList();

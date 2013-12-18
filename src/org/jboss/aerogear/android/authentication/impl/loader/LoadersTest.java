@@ -48,9 +48,7 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
         super(MainActivity.class);
     }
 
-    
-    
-    final HeaderAndBody response = new HeaderAndBody(new byte[]{1, 2, 3, 4}, new HashMap<String, Object>());
+    final HeaderAndBody response = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
     AuthenticationModule module;
     VoidCallback callback;
 
@@ -88,16 +86,16 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
         loader.loadInBackground();
         verify(module).login(anyMapOf(String.class, String.class), any(Callback.class));
     }
-    
+
     public void testLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
-        
+
         AuthenticationModule module = spy(new HttpBasicAuthenticationModule(new URL("http://test.com")));
         CountDownLatch latch = new CountDownLatch(1);
         final AtomicBoolean loggedIn = new AtomicBoolean(false);
         final AtomicInteger loginCount = new AtomicInteger(0);
         final AtomicInteger logoutCount = new AtomicInteger(0);
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(getActivity(), module, "ignore");
-        
+
         adapter = spy(adapter);
         doAnswer(new Answer() {
 
@@ -114,11 +112,11 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
                     logoutCount.incrementAndGet();
                     loggedIn.set(false);
                 }
-                ((Callback)bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
+                ((Callback) bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
                 return mock(Loader.class);
             }
         }).when(adapter).onCreateLoader(anyInt(), any(Bundle.class));
-        
+
         doAnswer(new Answer() {
 
             @Override
@@ -126,29 +124,29 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
                 return loggedIn.get();
             }
         }).when(module).isLoggedIn();
-        
+
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(1, TimeUnit.SECONDS));
-        
+
         latch = new CountDownLatch(1);
         adapter.logout(new VoidCallback());
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(2, TimeUnit.SECONDS));
         adapter.logout(new VoidCallback());
-        
+
         assertEquals(2, loginCount.get());
         assertEquals(2, logoutCount.get());
-        
+
     }
-    
+
     public void testLoginLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
-        
+
         AuthenticationModule module = new HttpBasicAuthenticationModule(new URL("http://test.com"));
         CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger loginCount = new AtomicInteger(0);
         final AtomicInteger logoutCount = new AtomicInteger(0);
         AuthenticationModuleAdapter adapter = new AuthenticationModuleAdapter(getActivity(), module, "ignore");
-        
+
         adapter = spy(adapter);
         doAnswer(new Answer() {
 
@@ -164,32 +162,32 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
                     logoutCount.incrementAndGet();
                     break;
                 }
-                ((Callback)bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
+                ((Callback) bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
                 return mock(Loader.class);
             }
         }).when(adapter).onCreateLoader(anyInt(), any(Bundle.class));
-        
+
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(1, TimeUnit.SECONDS));
-        
+
         latch = new CountDownLatch(1);
         adapter.logout(new VoidCallback());
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(2, TimeUnit.SECONDS));
-        
+
         assertEquals(2, loginCount.get());
         assertEquals(1, logoutCount.get());
-        
+
     }
 
     private final class ResponseAnswer<T> implements Answer<Void> {
 
         T response;
-        
+
         public ResponseAnswer(T response) {
             this.response = response;
         }
-        
+
         @Override
         public Void answer(InvocationOnMock invocation) throws Throwable {
             Callback callback = null;
@@ -208,5 +206,5 @@ public class LoadersTest extends PatchedActivityInstrumentationTestCase<MainActi
             return null;
         }
     }
-   
+
 }

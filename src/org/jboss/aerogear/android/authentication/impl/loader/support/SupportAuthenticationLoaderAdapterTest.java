@@ -32,9 +32,9 @@ import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.*;
+
 public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
 
-    
     private static String USERNAME_VALUE = "testUsername";
     private static String PASSWORD_VALUE = "testPassword";
     private FragmentActivity activity;
@@ -59,10 +59,9 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         when(activity.getApplicationContext()).thenReturn(getContext());
         when(fragment.getLoaderManager()).thenReturn(manager);
     }
-    
-    
+
     public void testCreateEnrollLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("username", "new User name");
@@ -71,32 +70,31 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         bundle.putSerializable(PARAMS, data);
         SupportEnrollLoader loader = (SupportEnrollLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
-		Map<String, String> result = (Map<String, String>) UnitTestUtils.getPrivateField(loader, "params");
+        Map<String, String> result = (Map<String, String>) UnitTestUtils.getPrivateField(loader, "params");
         assertEquals("new User name", result.get("username"));
     }
-    
+
     public void testCreateLoginLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
         Bundle loginParams = new Bundle();
         loginParams.putString(USERNAME, USERNAME_VALUE);
         loginParams.putString(PASSWORD, PASSWORD_VALUE);
-        
+
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGIN;
         bundle.putSerializable(METHOD, (Serializable) method);
         bundle.putBundle(PARAMS, loginParams);
-        
-        
+
         SupportLoginLoader loader = (SupportLoginLoader) authModule.onCreateLoader(-1, bundle);
         @SuppressWarnings("unchecked")
         HashMap loginData = (HashMap) UnitTestUtils.getPrivateField(loader, "loginData");
-        
+
         assertEquals(USERNAME_VALUE, loginData.get(USERNAME));
         assertEquals(PASSWORD_VALUE, loginData.get(PASSWORD));
     }
-    
+
     public void testCreateLogoutLoader() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-    	SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
+        SupportAuthenticationModuleAdapter authModule = new SupportAuthenticationModuleAdapter(activity, null, "name");
         Bundle bundle = new Bundle();
         Object method = SupportAuthenticationModuleAdapter.Methods.LOGOUT;
         bundle.putSerializable(METHOD, (Serializable) method);
@@ -148,7 +146,6 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertEquals(USERNAME_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME));
         assertEquals(PASSWORD_VALUE, bundle.getBundle(PARAMS).get(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME));
 
-
     }
 
     public void testFragmentEnroll() {
@@ -160,7 +157,6 @@ public class SupportAuthenticationLoaderAdapterTest extends AndroidTestCase {
         assertNotNull(bundle);
         assertEquals("ENROLL", ((Enum) bundle.get(METHOD)).name());
         assertEquals(userData, bundle.get(PARAMS));
-
 
     }
 

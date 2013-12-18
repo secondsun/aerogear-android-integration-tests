@@ -42,13 +42,13 @@ import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<MainFragmentActivity> {
+public class SupportLoadersTest extends PatchedActivityInstrumentationTestCase<MainFragmentActivity> {
 
     public SupportLoadersTest() {
         super(MainFragmentActivity.class);
     }
 
-    final HeaderAndBody response = new HeaderAndBody(new byte[]{1, 2, 3, 4}, new HashMap<String, Object>());
+    final HeaderAndBody response = new HeaderAndBody(new byte[] { 1, 2, 3, 4 }, new HashMap<String, Object>());
     AuthenticationModule module;
     VoidCallback callback;
 
@@ -86,16 +86,16 @@ public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<
         loader.loadInBackground();
         verify(module).login(anyMap(), any(Callback.class));
     }
-    
+
     public void testLoaderDoesNotCache() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, InterruptedException, MalformedURLException {
-        
+
         AuthenticationModule module = spy(new HttpBasicAuthenticationModule(new URL("http://test.com")));
         final AtomicBoolean loggedIn = new AtomicBoolean(false);
         CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger loginCount = new AtomicInteger(0);
         final AtomicInteger logoutCount = new AtomicInteger(0);
         SupportAuthenticationModuleAdapter adapter = new SupportAuthenticationModuleAdapter(getActivity(), module, "ignore");
-        
+
         adapter = spy(adapter);
         doAnswer(new Answer() {
 
@@ -113,11 +113,11 @@ public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<
                     loggedIn.set(false);
                     break;
                 }
-                ((Callback)bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
+                ((Callback) bundle.getSerializable(AuthenticationModuleAdapter.CALLBACK)).onSuccess(null);
                 return mock(Loader.class);
             }
         }).when(adapter).onCreateLoader(anyInt(), any(Bundle.class));
-        
+
         doAnswer(new Answer() {
 
             @Override
@@ -125,29 +125,29 @@ public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<
                 return loggedIn.get();
             }
         }).when(module).isLoggedIn();
-        
+
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(1, TimeUnit.SECONDS));
-        
+
         latch = new CountDownLatch(1);
         adapter.logout(new VoidCallback());
         adapter.login("evilname", "password", new VoidCallback(latch));
         assertTrue(latch.await(2, TimeUnit.SECONDS));
         adapter.logout(new VoidCallback());
-        
+
         assertEquals(2, loginCount.get());
         assertEquals(2, logoutCount.get());
-        
+
     }
 
     private final class ResponseAnswer<T> implements Answer<Void> {
 
         T response;
-        
+
         public ResponseAnswer(T response) {
             this.response = response;
         }
-        
+
         @Override
         public Void answer(InvocationOnMock invocation) throws Throwable {
             Callback callback = null;
@@ -166,5 +166,5 @@ public class SupportLoadersTest  extends PatchedActivityInstrumentationTestCase<
             return null;
         }
     }
-   
+
 }

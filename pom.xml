@@ -69,7 +69,7 @@
         <dexmaker.version>1.0</dexmaker.version>
         <dexmaker.mockito.version>1.0</dexmaker.mockito.version>
 
-        <maven.android.plugin.verson>3.8.0</maven.android.plugin.verson>
+        <maven.android.plugin.verson>3.8.1</maven.android.plugin.verson>
         <maven.dependency.plugin>2.5.1</maven.dependency.plugin>
         <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
         <java.version>1.7</java.version>
@@ -156,6 +156,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>scprov-jdk15on</artifactId>
+            <version>1.47.0.3</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>scpkix-jdk15on</artifactId>
+            <version>1.47.0.3</version>
+            <type>jar</type>
+        </dependency>
+        
     </dependencies>
 
     <build>

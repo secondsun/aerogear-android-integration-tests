@@ -27,19 +27,19 @@ import android.test.ActivityInstrumentationTestCase2;
  * test setup.
  * 
  */
-public abstract class PatchedActivityInstrumentationTestCase<T  extends Activity> extends ActivityInstrumentationTestCase2<T> {
+public abstract class PatchedActivityInstrumentationTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
 
     public PatchedActivityInstrumentationTestCase(Class<T> activity) {
         super(activity);
     }
-    
+
     @Override
     /**
      * Sets the dexcache property before test execution.
      */
     protected void setUp() throws Exception {
         super.setUp();
-        System.setProperty( "dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath() );
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
     }
-    
+
 }
