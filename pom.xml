@@ -104,6 +104,16 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.jboss.aerogear</groupId>
+            <artifactId>aerogear-crypto</artifactId>
+            <version>${aerogear.crypto.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>scprov-jdk15on</artifactId>
+            <version>${scprov.version}</version>    
+        </dependency>        
+        <dependency>
             <groupId>android.support</groupId>
             <artifactId>compatibility-v4</artifactId>
             <version>${android.support.version}</version>
@@ -251,6 +261,11 @@
                     <scope>provided</scope>
                     <type>jar</type>
                 </dependency>
+                <dependency>
+                    <groupId>org.jboss.aerogear</groupId>
+                    <artifactId>aerogear-crypto</artifactId>
+                    <version>${aerogear.crypto.version}</version>
+                </dependency>                
                 <dependency>
                     <groupId>android.support</groupId>
                     <artifactId>compatibility-v4</artifactId>

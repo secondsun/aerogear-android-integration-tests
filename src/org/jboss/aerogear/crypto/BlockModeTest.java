@@ -14,25 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear;
+package org.jboss.aerogear.crypto;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
+import android.test.AndroidTestCase;
+import static org.jboss.aerogear.crypto.BlockCipher.Mode;
 
-public class MainFragmentActivity extends FragmentActivity {
+public class BlockModeTest extends AndroidTestCase {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void testGcmToString() throws Exception {
+        String expectedMode = "GCM/NoPadding";
+        Mode mode = Mode.GCM;
+        assertEquals("Should return formatted block mode", expectedMode, mode.toString());
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
 }

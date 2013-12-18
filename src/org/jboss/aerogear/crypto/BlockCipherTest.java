@@ -14,25 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear;
+package org.jboss.aerogear.crypto;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
+import android.test.AndroidTestCase;
 
-public class MainFragmentActivity extends FragmentActivity {
+public class BlockCipherTest extends AndroidTestCase {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    public void testGetIV() throws Exception {
+        assertNotNull("IV should not be null", BlockCipher.getIV());
+        assertEquals("IV size should respect the mininum length", 16, BlockCipher.getIV().length);
     }
 
 }
