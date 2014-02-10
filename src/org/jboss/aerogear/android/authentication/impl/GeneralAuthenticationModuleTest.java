@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
@@ -66,7 +67,7 @@ public class GeneralAuthenticationModuleTest extends PatchedActivityInstrumentat
         module.login("username", "password", throwIfSuccess);
         module.logout(throwIfSuccess);
 
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
 
     }
 

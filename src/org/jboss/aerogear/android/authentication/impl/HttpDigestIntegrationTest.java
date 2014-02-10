@@ -191,7 +191,7 @@ public class HttpDigestIntegrationTest extends PatchedActivityInstrumentationTes
 
         final CountDownLatch logoutLatch = new CountDownLatch(1);
         basicAuthModule.logout(new VoidCallback(logoutLatch));
-        logoutLatch.await();
+        logoutLatch.await(2, TimeUnit.SECONDS);
         autobots.read(new Callback<List<String>>() {
 
             @Override

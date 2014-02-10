@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
+import java.util.concurrent.TimeUnit;
 
 public class SqlStoreTest extends AndroidTestCase {
 
@@ -162,7 +163,7 @@ public class SqlStoreTest extends AndroidTestCase {
                 throw new RuntimeException(e);
             }
         });
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
     }
 
     private void loadBulkData() throws InterruptedException {
