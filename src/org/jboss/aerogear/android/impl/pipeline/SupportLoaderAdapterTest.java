@@ -66,6 +66,9 @@ import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallback;
+import org.mockito.Matchers;
+import static org.mockito.Matchers.anyObject;
+
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings( { "unchecked", "rawtypes" })
@@ -321,8 +324,7 @@ public class SupportLoaderAdapterTest extends
     public void testMultipleCallsToLoadCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onReadWithFilter((ReadFilter) any(), (Pipe) any()))
-                .thenReturn(new ArrayList());
+        when(handler.onRawReadWithFilter((ReadFilter) any(), (Pipe) any())).thenReturn(new HeaderAndBody(new byte[] {}, new HashMap<String, Object>()));
         SupportReadLoader loader = new SupportReadLoader(getActivity(), null,
                 handler, null, null) {
             @Override
@@ -351,9 +353,10 @@ public class SupportLoaderAdapterTest extends
     public void testMultipleCallsToSaveCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onSave(any())).thenReturn(new ArrayList());
+        when(handler.onRawSave(Matchers.anyString(), (byte[]) anyObject())).thenReturn(new HeaderAndBody(new byte[] {}, new HashMap<String, Object>()));
         SupportSaveLoader loader = new SupportSaveLoader(getActivity(), null,
-                handler, null) {
+                handler, null, null) {
+
             @Override
             public void deliverResult(Object data) {
                 called.set(true);
@@ -369,6 +372,7 @@ public class SupportLoaderAdapterTest extends
             public void onStartLoading() {
                 super.onStartLoading();
             }
+
         };
         loader.loadInBackground();
         UnitTestUtils.callMethod(loader, "onStartLoading");
