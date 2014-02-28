@@ -65,6 +65,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
+import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallback;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings( { "unchecked", "rawtypes" })
@@ -126,6 +127,146 @@ public class SupportLoaderAdapterTest extends
         assertNotNull(bundle.get(METHOD));
         assertTrue(((Enum) bundle.get(METHOD)).name().equals("READ"));
         assertNull(bundle.get(REMOVE_ID));
+
+    }
+
+    public void testReadCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.read(new AbstractSupportFragmentCallback<List<SupportLoaderAdapterTest.ListClassId>>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(List<SupportLoaderAdapterTest.ListClassId> data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+    }
+
+    public void testSaveCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.save(new ListClassId(true), new AbstractSupportFragmentCallback<SupportLoaderAdapterTest.ListClassId>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(ListClassId data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+
+    }
+
+    public void testDeleteCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.remove("1", new AbstractSupportFragmentCallback<Void>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(Void data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
 
     }
 

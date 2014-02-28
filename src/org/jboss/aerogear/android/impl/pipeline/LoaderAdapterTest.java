@@ -77,6 +77,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
+import org.jboss.aerogear.android.pipeline.AbstractFragmentCallback;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings( { "unchecked", "rawtypes" })
@@ -129,6 +130,145 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
 
     }
 
+    public void testReadCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                LoaderAdapterTest.ListClassId.class);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+
+        try {
+            adapter.read(new AbstractFragmentCallback<List<LoaderAdapterTest.ListClassId>>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(List<LoaderAdapterTest.ListClassId> data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+    }
+
+    public void testSaveCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                LoaderAdapterTest.ListClassId.class);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+
+        try {
+
+            adapter.save(new ListClassId(true), new AbstractFragmentCallback<LoaderAdapterTest.ListClassId>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(ListClassId data) {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+
+    }
+
+    public void testDeleteCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                LoaderAdapterTest.ListClassId.class);
+        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<LoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(LoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<LoaderAdapterTest.ListClassId> adapter = pipeline.get(config.getName(), getActivity());
+
+        try {
+            adapter.remove("1", new AbstractFragmentCallback<Void>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(Void data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+
+    }
+
     public void testSingleObjectSave() throws Exception {
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
@@ -139,15 +279,15 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
 
         when(provider.post((byte[]) anyObject()))
                 .thenReturn(new HeaderAndBody(
-                            SERIALIZED_POINTS.getBytes(),
-                            new HashMap<String, Object>())
-                       );
+                                SERIALIZED_POINTS.getBytes(),
+                                new HashMap<String, Object>())
+                );
 
         when(provider.put(any(String.class), (byte[]) anyObject()))
                 .thenReturn(new HeaderAndBody(
-                            SERIALIZED_POINTS.getBytes(),
-                            new HashMap<String, Object>())
-                       );
+                                SERIALIZED_POINTS.getBytes(),
+                                new HashMap<String, Object>())
+                );
 
         PipeConfig config = new PipeConfig(url,
                 LoaderAdapterTest.ListClassId.class);
@@ -306,7 +446,7 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
     /**
      * Runs a read method, returns the result of the call back and makes sure no
      * exceptions are thrown
-     * 
+     *
      * @param restPipe
      */
     private <T> List<T> runRead(Pipe<T> restPipe, ReadFilter readFilter)
@@ -340,9 +480,9 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
     }
 
     /**
-     * Runs a remove method, returns the result of the call back and makes sure no
-     * exceptions are thrown
-     * 
+     * Runs a remove method, returns the result of the call back and makes sure
+     * no exceptions are thrown
+     *
      */
     private <T> void runRemove(Pipe<T> restPipe, String id)
             throws InterruptedException {
@@ -376,22 +516,22 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
         final AtomicBoolean hasException = new AtomicBoolean(false);
 
         restPipe.save(new ListClassId(true),
-                      new Callback<ListClassId>() {
-                          private static final long serialVersionUID = 1L;
+                new Callback<ListClassId>() {
+                    private static final long serialVersionUID = 1L;
 
-                          @Override
-                          public void onSuccess(ListClassId data) {
-                              latch.countDown();
-                          }
+                    @Override
+                    public void onSuccess(ListClassId data) {
+                        latch.countDown();
+                    }
 
-                          @Override
-                          public void onFailure(Exception e) {
-                              hasException.set(true);
-                              Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
-                                      .log(Level.SEVERE, e.getMessage(), e);
-                              latch.countDown();
-                          }
-                      });
+                    @Override
+                    public void onFailure(Exception e) {
+                        hasException.set(true);
+                        Logger.getLogger(LoaderAdapterTest.class.getSimpleName())
+                                .log(Level.SEVERE, e.getMessage(), e);
+                        latch.countDown();
+                    }
+                });
 
         latch.await(2, TimeUnit.SECONDS);
         Assert.assertFalse(hasException.get());
