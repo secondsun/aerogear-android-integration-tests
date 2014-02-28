@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.crypto.keys;
 
-
 import android.test.AndroidTestCase;
 import java.util.Arrays;
 import static junit.framework.Assert.fail;
@@ -26,7 +25,6 @@ import static org.jboss.aerogear.fixture.TestVectors.BOB_SECRET_KEY;
 
 public class PrivateKeyTest extends AndroidTestCase {
 
-    
     public void testGeneratePrivateKey() {
         try {
             new PrivateKey();
@@ -35,7 +33,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         }
     }
 
-    
     public void testAcceptsRawValidKey() throws Exception {
         try {
             byte[] rawKey = HEX.decode(BOB_SECRET_KEY);
@@ -46,7 +43,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         }
     }
 
-    
     public void testAcceptsHexValidKey() throws Exception {
         try {
             new PrivateKey(BOB_SECRET_KEY, HEX);
@@ -56,7 +52,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         }
     }
 
-    
     public void testCreateHexValidKey() throws Exception {
         try {
             new PrivateKey(BOB_SECRET_KEY, HEX).toString();
@@ -66,7 +61,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         }
     }
 
-    
     public void testCreateByteValidKey() throws Exception {
         try {
             new PrivateKey(BOB_SECRET_KEY, HEX).toBytes();
@@ -98,7 +92,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         fail("Should reject short keys");
     }
 
-    
     public void testPrivateKeyToString() throws Exception {
         try {
             PrivateKey key = new PrivateKey(BOB_SECRET_KEY, HEX);
@@ -108,7 +101,6 @@ public class PrivateKeyTest extends AndroidTestCase {
         }
     }
 
-    
     public void testPrivateKeyToBytes() throws Exception {
         try {
             PrivateKey key = new PrivateKey(BOB_SECRET_KEY, HEX);

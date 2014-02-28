@@ -20,12 +20,11 @@ import android.test.AndroidTestCase;
 import static org.jboss.aerogear.crypto.Algorithm.AES;
 
 public class AlgorithmTest extends AndroidTestCase {
-    
+
     public void testAESToString() throws Exception {
         assertEquals("Should return the correct algorithm name", "AES", AES.toString());
     }
 
-    
     public void testGetAESKeySize() throws Exception {
         assertEquals("Should return the correct key size", 256, AES.getKeySize());
     }

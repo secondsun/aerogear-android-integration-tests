@@ -29,8 +29,6 @@ import org.jboss.aerogear.fixture.TestVectors;
 
 public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestCase<MainActivity> {
 
-    
-    
     public PasswordKeyServicesTest() {
         super(MainActivity.class);
     }
@@ -38,65 +36,61 @@ public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestC
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         //Generate the keyStore with the correct password.
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("testPhrase");
-        
+
         PasswordEncryptionServices service = new PasswordEncryptionServices(config, getActivity());
-        
+
     }
-    
-    
-    
+
     public void testPasswordKeyServicesEncrypt() {
         String message = "This is a test message";
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("testPhrase");
-        
+
         PasswordEncryptionServices service = new PasswordEncryptionServices(config, getActivity());
         byte[] encrypted = service.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
-        
+
         assertFalse(Arrays.equals(encrypted, message.getBytes()));
         byte[] decrypted = service.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
         assertTrue(Arrays.equals(decrypted, message.getBytes()));
-        
+
     }
-    
-    
+
     public void testPasswordKeyServicesEncryptShareKey() {
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("testPhrase");
-        
+
         PasswordEncryptionServices service = new PasswordEncryptionServices(config, getActivity());
         PasswordEncryptionServices service2 = new PasswordEncryptionServices(config, getActivity());
         String message = "This is a test message";
-        
-        
+
         byte[] encrypted = service.encrypt(TestVectors.CRYPTOBOX_IV.getBytes(), message.getBytes());
-        
+
         assertFalse(Arrays.equals(encrypted, message.getBytes()));
         byte[] decrypted = service2.decrypt(TestVectors.CRYPTOBOX_IV.getBytes(), encrypted);
         assertTrue(Arrays.equals(decrypted, message.getBytes()));
     }
-    
+
     public void testBadpassPhraseCrashes() {
         String message = "This is a test message";
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("failPhrase");
-        
+
         try {
             new PasswordEncryptionServices(config, getActivity());
         } catch (Exception e) {
             return;
         }
-        
+
         fail();
-        
+
     }
-    
+
 }
