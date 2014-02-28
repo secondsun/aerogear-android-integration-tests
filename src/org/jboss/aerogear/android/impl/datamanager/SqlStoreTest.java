@@ -34,6 +34,7 @@ import android.content.Context;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import java.util.concurrent.TimeUnit;
+import org.jboss.aerogear.android.DataManager;
 
 public class SqlStoreTest extends AndroidTestCase {
 
@@ -115,6 +116,36 @@ public class SqlStoreTest extends AndroidTestCase {
 
     }
 
+    public void testNameProperty() throws Exception {
+        DataManager manager = new DataManager();
+        
+        StoreConfig dataStoreConfig = new StoreConfig(Data.class);
+        dataStoreConfig.setName("Data");
+        dataStoreConfig.setContext(context);
+        dataStoreConfig.setType(StoreTypes.SQL);
+        
+        StoreConfig loreStoreConfig = new StoreConfig(Data.class);
+        loreStoreConfig.setName("Lore");
+        loreStoreConfig.setContext(context);
+        loreStoreConfig.setType(StoreTypes.SQL);
+        
+        SQLStore<Data> dataStore = (SQLStore<Data>) manager.store("data", dataStoreConfig);
+        SQLStore<Data> loreStore = (SQLStore<Data>) manager.store("lore", loreStoreConfig);
+        final CountDownLatch openLatch = new CountDownLatch(2);
+        ExceptionAwareCallback callback = new ExceptionAwareCallback(openLatch);
+        loreStore.open(callback);
+        dataStore.open(callback);
+        
+        Assert.assertTrue(openLatch.await(2000, TimeUnit.MILLISECONDS));
+        
+        Assert.assertNull(callback.exception);
+        
+        dataStore.save(new Data(1, "test", "tist"));
+        
+        Assert.assertTrue(loreStore.readAll().isEmpty());
+        
+    }
+    
     public void testNestedSaveAndFilter() throws InterruptedException, JSONException {
         ReadFilter filter;
         JSONObject where;
@@ -206,4 +237,27 @@ public class SqlStoreTest extends AndroidTestCase {
             this.data = data;
         }
     }
+    
+    
+    private static class ExceptionAwareCallback implements Callback<SQLStore<Data>> {
+
+        public Exception exception;
+        private final CountDownLatch openLatch;
+
+        public ExceptionAwareCallback(CountDownLatch openLatch) {
+            this.openLatch = openLatch;
+        }
+
+        @Override
+        public void onSuccess(SQLStore<Data> data) {
+            openLatch.countDown();
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            openLatch.countDown();
+            this.exception = e;
+        }
+    };
+
 }
