@@ -32,27 +32,26 @@ public class KeyManagerTest extends PatchedActivityInstrumentationTestCase<MainA
     public KeyManagerTest() {
         super(MainActivity.class);
     }
-    
+
     public void testPassPhraseKeyManager() {
         PassphraseEncryptionServices.PassPhraseCryptoConfig config = new PassphraseEncryptionServices.PassPhraseCryptoConfig();
         config.setPassphrase("testPhrase");
         config.setSalt(new Random().randomBytes(1024));
-        
+
         KeyManager manager = new KeyManager();
         EncryptionService service1 = manager.encryptionService("testService", config, getActivity());
         EncryptionService service2 = manager.get("testService");
         assertTrue(service1 instanceof PassphraseEncryptionServices);
         assertSame(service1, service2);
-        
+
         manager.remove("testService");
         assertNull(manager.get("testService"));
-        
-        
+
     }
 
     public void testFactory() {
         final EncryptionService mockService = mock(EncryptionService.class);
-        
+
         KeyManager manager = new KeyManager(new EncryptionServiceFactory() {
 
             @Override
@@ -60,27 +59,25 @@ public class KeyManagerTest extends PatchedActivityInstrumentationTestCase<MainA
                 return mockService;
             }
         });
-        
+
         assertSame(mockService, manager.encryptionService("testService", null, null));
-        
-        
+
     }
-    
+
     public void testPasswordKeyManager() {
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("testPhrase");
-        
+
         KeyManager manager = new KeyManager();
         EncryptionService service1 = manager.encryptionService("testService", config, getActivity());
         EncryptionService service2 = manager.get("testService");
-        
+
         assertSame(service1, service2);
         assertTrue(service1 instanceof PasswordEncryptionServices);
         manager.remove("testService");
         assertNull(manager.get("testService"));
-        
-        
+
     }
-    
+
 }

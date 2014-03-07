@@ -49,7 +49,6 @@ public class CryptoBoxTest extends AndroidTestCase {
         }
     }
 
-    
     public void testNullPrivateKey() throws Exception {
         try {
             String key = null;
@@ -57,11 +56,10 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-        
+
         fail("Should raise an exception");
     }
 
-    
     public void testInvalidPrivateKey() throws Exception {
         try {
             String key = "hello";
@@ -69,7 +67,7 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-        
+
         fail("Should raise an exception");
     }
 
@@ -124,13 +122,12 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-        
+
         fail("Should raise an exception");
     }
 
-    
     public void testDecryptCorruptedIV() throws Exception {
-        try { 
+        try {
             CryptoBox cryptoBox = new CryptoBox(new PrivateKey(BOB_SECRET_KEY));
             byte[] IV = HEX.decode(CRYPTOBOX_IV);
             byte[] message = HEX.decode(CRYPTOBOX_MESSAGE);
@@ -142,7 +139,7 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-       
+
         fail("Should raise an exception");
     }
 
@@ -163,11 +160,10 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-            
+
         fail("Should raise an exception");
     }
 
-    
     public void testNullSecretKey() throws Exception {
         try {
             KeyPair keyPair = new KeyPair();
@@ -175,7 +171,7 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-        
+
         fail("Should raise an exception");
     }
 
@@ -193,7 +189,6 @@ public class CryptoBoxTest extends AndroidTestCase {
         assertTrue("failed to decrypt ciphertext", Arrays.equals(message, expectedMessage));
     }
 
-    
     public void testAsymmetricDecryptCorruptedCipherText() throws Exception {
         try {
             KeyPair keyPair = new KeyPair();
@@ -209,7 +204,7 @@ public class CryptoBoxTest extends AndroidTestCase {
         } catch (RuntimeException e) {
             return;
         }
-        
+
         fail("Should raise an exception");
     }
 }

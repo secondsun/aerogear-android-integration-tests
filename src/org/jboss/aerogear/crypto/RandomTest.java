@@ -20,7 +20,7 @@ import android.test.AndroidTestCase;
 import java.util.Arrays;
 
 public class RandomTest extends AndroidTestCase {
-    
+
     public void testProducesRandomBytes() throws Exception {
         final int size = 16;
         assertEquals("Invalid random bytes", size, new Random().randomBytes(size).length);

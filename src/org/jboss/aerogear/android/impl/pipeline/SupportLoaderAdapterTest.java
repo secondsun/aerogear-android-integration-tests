@@ -65,6 +65,10 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
+import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallback;
+import org.mockito.Matchers;
+import static org.mockito.Matchers.anyObject;
+
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings( { "unchecked", "rawtypes" })
@@ -129,6 +133,146 @@ public class SupportLoaderAdapterTest extends
 
     }
 
+    public void testReadCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.read(new AbstractSupportFragmentCallback<List<SupportLoaderAdapterTest.ListClassId>>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(List<SupportLoaderAdapterTest.ListClassId> data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+    }
+
+    public void testSaveCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.save(new ListClassId(true), new AbstractSupportFragmentCallback<SupportLoaderAdapterTest.ListClassId>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(ListClassId data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+
+    }
+
+    public void testDeleteCallbackFailsWithIncompatibleType() throws Exception {
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                Point.class, new PointTypeAdapter());
+        HeaderAndBody response = new HeaderAndBody(
+                SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>());
+        final HttpStubProvider provider = new HttpStubProvider(url, response);
+        PipeConfig config = new PipeConfig(url,
+                SupportLoaderAdapterTest.ListClassId.class);
+        config.setGsonBuilder(builder);
+
+        Pipeline pipeline = new Pipeline(url);
+
+        Pipe<SupportLoaderAdapterTest.ListClassId> restPipe = pipeline.pipe(
+                SupportLoaderAdapterTest.ListClassId.class, config);
+
+        Object restRunner = UnitTestUtils.getPrivateField(restPipe,
+                "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory",
+                new Provider<HttpProvider>() {
+                    @Override
+                    public HttpProvider get(Object... in) {
+                        return provider;
+                    }
+                });
+
+        LoaderPipe<SupportLoaderAdapterTest.ListClassId> adapter = pipeline
+                .get(config.getName(), getActivity());
+        try {
+            adapter.remove("1", new AbstractSupportFragmentCallback<Void>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void onSuccess(Void data) {
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            return;
+        }
+        fail("Incorrect callback should throw exception.");
+
+    }
+
     public void testSingleObjectDelete() throws Exception {
 
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
@@ -180,8 +324,7 @@ public class SupportLoaderAdapterTest extends
     public void testMultipleCallsToLoadCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onReadWithFilter((ReadFilter) any(), (Pipe) any()))
-                .thenReturn(new ArrayList());
+        when(handler.onRawReadWithFilter((ReadFilter) any(), (Pipe) any())).thenReturn(new HeaderAndBody(new byte[] {}, new HashMap<String, Object>()));
         SupportReadLoader loader = new SupportReadLoader(getActivity(), null,
                 handler, null, null) {
             @Override
@@ -210,9 +353,10 @@ public class SupportLoaderAdapterTest extends
     public void testMultipleCallsToSaveCallDeliver() {
         PipeHandler handler = mock(PipeHandler.class);
         final AtomicBoolean called = new AtomicBoolean(false);
-        when(handler.onSave(any())).thenReturn(new ArrayList());
+        when(handler.onRawSave(Matchers.anyString(), (byte[]) anyObject())).thenReturn(new HeaderAndBody(new byte[] {}, new HashMap<String, Object>()));
         SupportSaveLoader loader = new SupportSaveLoader(getActivity(), null,
-                handler, null) {
+                handler, null, null) {
+
             @Override
             public void deliverResult(Object data) {
                 called.set(true);
@@ -228,6 +372,7 @@ public class SupportLoaderAdapterTest extends
             public void onStartLoading() {
                 super.onStartLoading();
             }
+
         };
         loader.loadInBackground();
         UnitTestUtils.callMethod(loader, "onStartLoading");

@@ -16,6 +16,7 @@
  */
 package org.jboss.aerogear.android.authentication.impl;
 
+import android.test.suitebuilder.annotation.Suppress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import android.util.Log;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 
+@Suppress
 public class HttpDigestIntegrationTest extends PatchedActivityInstrumentationTestCase implements AuthenticationModuleTest {
 
     private static final URL CONTROLLER_URL;
@@ -189,7 +191,7 @@ public class HttpDigestIntegrationTest extends PatchedActivityInstrumentationTes
 
         final CountDownLatch logoutLatch = new CountDownLatch(1);
         basicAuthModule.logout(new VoidCallback(logoutLatch));
-        logoutLatch.await();
+        logoutLatch.await(2, TimeUnit.SECONDS);
         autobots.read(new Callback<List<String>>() {
 
             @Override

@@ -20,7 +20,6 @@ import android.test.AndroidTestCase;
 
 public class KeyPairTest extends AndroidTestCase {
 
-    
     public void testGenerateKeyPair() {
         try {
             KeyPair key = new KeyPair();
@@ -31,7 +30,6 @@ public class KeyPairTest extends AndroidTestCase {
         }
     }
 
-    
     public void testGeneratePublicKey() throws Exception {
         try {
             KeyPair key = new KeyPair();

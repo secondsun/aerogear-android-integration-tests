@@ -22,11 +22,10 @@ import java.util.Arrays;
 
 import static junit.framework.Assert.assertNull;
 
-
 public class RawTest extends AndroidTestCase {
 
     private static final String TAG = RawTest.class.getSimpleName();
-    
+
     private Encoder encoder;
 
     @Override

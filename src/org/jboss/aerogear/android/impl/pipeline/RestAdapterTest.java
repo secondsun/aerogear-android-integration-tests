@@ -173,13 +173,13 @@ public class RestAdapterTest extends AndroidTestCase {
 
         Pipeline pipeline = new Pipeline(url);
         PipeConfig config = new PipeConfig(url, ListClassId.class);
-        config.setEncoding(utf_16);
         config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
+        config.setEncoding(utf_16);
 
         RestAdapter<ListClassId> restPipe = (RestAdapter<ListClassId>) pipeline
                 .pipe(ListClassId.class, config);
-        Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");
-        assertEquals(utf_16, UnitTestUtils.getPrivateField(restRunner, "encoding"));
+
+        assertEquals(utf_16, restPipe.getRequestBuilder().getMarshallingConfig().getEncoding());
 
     }
 

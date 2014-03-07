@@ -92,7 +92,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
 
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
         Assert.assertNotNull(callback.exception);
         Assert.assertFalse(module.isLoggedIn());
     }
@@ -122,7 +122,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
 
         SimpleCallback callback = new SimpleCallback(latch);
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
 
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
@@ -159,7 +159,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
         userData.put("role", "admin");
 
         module.enroll(userData, callback);
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
 
@@ -195,7 +195,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
 
         module.login(PASSING_USERNAME, LOGIN_PASSWORD, callback);
 
-        latch.await();
+        latch.await(2, TimeUnit.SECONDS);
 
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
@@ -227,7 +227,7 @@ public class AGSecurityAuthenticationModuleTest extends PatchedActivityInstrumen
 
         module.logout(voidCallback);
 
-        latch2.await();
+        latch2.await(2, TimeUnit.SECONDS);
 
         Assert.assertNull(voidCallback.exception);
 
