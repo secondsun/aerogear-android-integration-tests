@@ -17,7 +17,7 @@
 package org.jboss.aerogear.crypto;
 
 import android.test.AndroidTestCase;
-import static org.jboss.aerogear.crypto.BlockCipher.Mode;
+import static org.jboss.aerogear.AeroGearCrypto.Mode;
 
 public class BlockModeTest extends AndroidTestCase {
 

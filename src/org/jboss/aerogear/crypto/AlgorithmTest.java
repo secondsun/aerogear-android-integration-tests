@@ -17,7 +17,8 @@
 package org.jboss.aerogear.crypto;
 
 import android.test.AndroidTestCase;
-import static org.jboss.aerogear.crypto.Algorithm.AES;
+import static org.jboss.aerogear.AeroGearCrypto.Algorithm.AES;
+
 
 public class AlgorithmTest extends AndroidTestCase {
 
