@@ -77,7 +77,8 @@ public class PasswordKeyServicesTest extends PatchedActivityInstrumentationTestC
         assertTrue(Arrays.equals(decrypted, message.getBytes()));
     }
 
-    public void testPassPhraseConfiguration() {
+    //FIXME: Intentionally ignored
+    public void ignorePassPhraseConfiguration() {
         PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig config = new PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig();
         config.setAlias("TestAlias");
         config.setPassword("passphrase");
