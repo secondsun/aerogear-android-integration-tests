@@ -17,8 +17,8 @@
 package org.jboss.aerogear.crypto;
 
 import android.test.AndroidTestCase;
-import static org.jboss.aerogear.crypto.Padding.NONE;
-import static org.jboss.aerogear.crypto.Padding.PKCS7;
+import static org.jboss.aerogear.AeroGearCrypto.Padding.NONE;
+import static org.jboss.aerogear.AeroGearCrypto.Padding.PKCS7;
 
 public class PaddingTest extends AndroidTestCase {
 
