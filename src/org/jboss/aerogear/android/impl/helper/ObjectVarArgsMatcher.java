@@ -23,7 +23,7 @@ import org.mockito.internal.matchers.VarargMatcher;
 /**
  * Convenience class for matching varargs.
  * 
- * @see LoaderAdapterTest.java line 378
+ * @see LoaderAdapterTest line 378
  */
 public class ObjectVarArgsMatcher extends ArgumentMatcher<Object> implements
         VarargMatcher {

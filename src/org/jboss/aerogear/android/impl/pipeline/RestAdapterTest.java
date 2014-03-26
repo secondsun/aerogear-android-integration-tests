@@ -64,9 +64,6 @@ import org.json.JSONObject;
 
 import android.graphics.Point;
 import android.test.AndroidTestCase;
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonDeserializationContext;
@@ -78,8 +75,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import static junit.framework.Assert.assertEquals;
 
 public class RestAdapterTest extends AndroidTestCase {
@@ -95,6 +90,7 @@ public class RestAdapterTest extends AndroidTestCase {
         }
     };
 
+    @Override
     public void setUp() throws MalformedURLException {
         url = new URL("http://server.com/context/");
     }
@@ -394,9 +390,10 @@ public class RestAdapterTest extends AndroidTestCase {
 
     /**
      * This test tests the default paging configuration.
+     *
+     * @throws java.lang.Exception aerogear-android breaks an exception may be thrown and recorded by JUnit
      */
-    public void testLinkPagingReturnsData() throws InterruptedException, NoSuchFieldException, NoSuchFieldException, IllegalArgumentException,
-            IllegalAccessException, Exception {
+    public void testLinkPagingReturnsData() throws Exception {
         Pipeline pipeline = new Pipeline(url);
 
         final HttpStubProvider provider = new HttpStubProvider(url, new HeaderAndBody(SERIALIZED_POINTS.getBytes(), new HashMap<String, Object>()));
@@ -431,9 +428,10 @@ public class RestAdapterTest extends AndroidTestCase {
 
     /**
      * This test tests the default paging configuration.
+     *
+     * @throws java.lang.Exception aerogear-android breaks an exception may be thrown and recorded by JUnit
      */
-    public void testDefaultPaging() throws InterruptedException, NoSuchFieldException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException,
-            URISyntaxException {
+    public void testDefaultPaging() throws Exception {
         Pipeline pipeline = new Pipeline(url);
 
         PageConfig pageConfig = new PageConfig();
