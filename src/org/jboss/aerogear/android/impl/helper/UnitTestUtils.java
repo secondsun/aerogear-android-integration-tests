@@ -81,9 +81,12 @@ public class UnitTestUtils {
      * @param fieldName the field to spy on
      * @param type The type of the spy
      * @return a spy which has replaced the field from fieldName
-     * @throws NoSuchFieldException
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException 
+     * 
+     * @param <T> the class of object which is being replaced with a spy.
+     * 
+     * @throws NoSuchFieldException if a field is not found. (Thrown from the java reflection API)
+     * @throws IllegalArgumentException if an argument is illegal. (Thrown from the java reflection API)
+     * @throws IllegalAccessException if access is exceptional.  (Thrown from the java reflection API)
      */
     public static <T> T replaceWithSpy(Object target, String fieldName,
             Class<T> type) throws NoSuchFieldException,
