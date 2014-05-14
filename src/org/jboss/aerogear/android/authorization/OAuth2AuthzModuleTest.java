@@ -18,6 +18,7 @@ import org.jboss.aerogear.android.impl.authz.oauth2.OAuth2AuthzSession;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -77,6 +78,33 @@ public class OAuth2AuthzModuleTest extends PatchedActivityInstrumentationTestCas
         
         assertEquals("Bearer testToken", module.getAuthorizationFields(null, null, null).getHeaders().get(0).second);
         assertEquals("Authorization", module.getAuthorizationFields(null, null, null).getHeaders().get(0).first);
+    }
+        
+    public void testOAuth2AuthorizationCallback() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+        AuthzService mockService = mock(AuthzService.class);
+        Activity mockActivity = mock(Activity.class);
+        ServiceConnection mockServiceConnection = mock(ServiceConnection.class);
+        
+        ArgumentCaptor<OAuth2AuthzSession> sessionCaptor = ArgumentCaptor.forClass(OAuth2AuthzSession.class);
+        
+        AuthzConfig config = new AuthzConfig(BASE_URL, "name");
+        config.setAccountId("testAccountId");
+        
+        OAuth2AuthzModule module = new OAuth2AuthzModule(config);
+        Class<?> callbackClass = Class.forName("org.jboss.aerogear.android.impl.authz.oauth2.OAuth2AuthzModule$OAuth2AuthorizationCallback");
+        Constructor<?> constructor = callbackClass.getDeclaredConstructor(OAuth2AuthzModule.class, Activity.class, Callback.class, ServiceConnection.class);
+        constructor.setAccessible(true);
+        
+        Callback callback = (Callback) constructor.newInstance(module, mockActivity, new VoidCallback(), mockServiceConnection);
+        
+        
+        UnitTestUtils.setPrivateField(module, "service", mockService);
+        
+        callback.onSuccess("testCode");
+        
+        Mockito.verify(mockService, times(1)).addAccount(sessionCaptor.capture());
+        OAuth2AuthzSession account = sessionCaptor.getValue();
+        assertEquals("testCode", account.getAuthorizationCode());
     }
     
     public void testOAuth2AccessCallback() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
