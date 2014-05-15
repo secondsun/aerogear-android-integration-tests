@@ -3,23 +3,21 @@ package org.jboss.aerogear.android.authorization;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.util.Pair;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.jboss.aerogear.MainActivity;
 import org.jboss.aerogear.android.Callback;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.impl.authz.AuthzConfig;
 import org.jboss.aerogear.android.impl.authz.AuthzService;
+import org.jboss.aerogear.android.impl.authz.OAuth2AuthorizationException;
 import org.jboss.aerogear.android.impl.authz.oauth2.OAuth2AuthzModule;
 import org.jboss.aerogear.android.impl.authz.oauth2.OAuth2AuthzSession;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.jboss.aerogear.android.impl.util.PatchedActivityInstrumentationTestCase;
 import org.jboss.aerogear.android.impl.util.VoidCallback;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.matches;
@@ -80,7 +78,8 @@ public class OAuth2AuthzModuleTest extends PatchedActivityInstrumentationTestCas
         assertEquals("Authorization", module.getAuthorizationFields(null, null, null).getHeaders().get(0).first);
     }
         
-    public void testOAuth2AuthorizationCallback() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+    public void testOAuth2AuthorizationCallback() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, OAuth2AuthorizationException, InterruptedException {
+        
         AuthzService mockService = mock(AuthzService.class);
         Activity mockActivity = mock(Activity.class);
         ServiceConnection mockServiceConnection = mock(ServiceConnection.class);
@@ -101,7 +100,7 @@ public class OAuth2AuthzModuleTest extends PatchedActivityInstrumentationTestCas
         UnitTestUtils.setPrivateField(module, "service", mockService);
         
         callback.onSuccess("testCode");
-        
+
         Mockito.verify(mockService, times(1)).addAccount(sessionCaptor.capture());
         OAuth2AuthzSession account = sessionCaptor.getValue();
         assertEquals("testCode", account.getAuthorizationCode());
