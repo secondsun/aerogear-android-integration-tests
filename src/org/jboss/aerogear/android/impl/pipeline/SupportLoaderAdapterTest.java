@@ -69,7 +69,6 @@ import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallba
 import org.mockito.Matchers;
 import static org.mockito.Matchers.anyObject;
 
-
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressWarnings( { "unchecked", "rawtypes" })
 public class SupportLoaderAdapterTest extends

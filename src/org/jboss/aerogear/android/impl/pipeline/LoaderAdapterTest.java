@@ -710,7 +710,7 @@ public class LoaderAdapterTest extends PatchedActivityInstrumentationTestCase<Ma
 
     public static class MultiPartData {
 
-        private byte[] byteArray = {'a', 'b', 'c', 'd', 'e', 'f'};
+        private byte[] byteArray = { 'a', 'b', 'c', 'd', 'e', 'f' };
         private InputStream inputStream = new ByteArrayInputStream(byteArray);
 
         @RecordId
